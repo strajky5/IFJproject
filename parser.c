@@ -240,8 +240,8 @@ int blockList() {
 int commands() {
 	switch(T.type){
 		case T_ID:
-			tBSTNodePtr *glob;
-			tBSTNodePtr *loc;
+			tVariable *glob;
+			tVariable *loc;
 			tParamList *par;
 			if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 			Tape->last->instruction = ASSIGN;
@@ -277,7 +277,7 @@ int commands() {
 				}
 			}
 
-			Tape->last->result = Tape->last->previous->result;
+			Tape->last->op2 = Tape->last->previous->result;
 
 			gettoken();
 			if ((error = testToken(T_ASSIGN)) != E_OK) return error;
@@ -338,9 +338,9 @@ int commands() {
 			}
 		    if(!strCmpConstStr (&(T.s), "while")){
                 if((error = ExpParser()) != E_OK) return error; //vyraz
+                if (res != 3 ) return E_SEMB;
 				Tape->last->instruction = JUMP;
 				Tape->last->op2 = Tape->last->previous->result;
-				if (res != 3 ) return E_SEMB;
 				if((error = testToken(T_KEYWORD)) == E_OK){
 					if(strCmpConstStr (&(T.s),"do")) return E_SYN; //begin slozeneho prikazu
 				}
