@@ -48,6 +48,7 @@ int parser() {
     if(insertFunListItemEmbed("copy") != E_OK) return E_INTERN;
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
+	WriteTape();
 	//free(TempVar);
 	BSTDispose(&TempTree);
 //	printf("eror je %d \n",error);

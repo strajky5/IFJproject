@@ -401,3 +401,15 @@ tErrors InsertEmptyItemTape()                         // vlozeni prazdneho prvku
     }
     return E_OK;                                                    // vracim e_ok
 }
+
+void WriteTape()
+{
+    while(Tape->active->next != NULL)
+    {
+        printf("\n");
+        printf("|OP1:%d|INST:%d|OP2:%d|RESULT:%d \n",Tape->active->op1->type,Tape->active->instruction,Tape->active->op2->type,Tape->active->result->type);
+        printf("|OP1:%d|INST:%d|OP2:%d|RESULT:%d \n",Tape->active->op1->name,Tape->active->instruction,Tape->active->op2->name,Tape->active->result->name);
+        Tape->active = Tape->active->next;
+    }
+
+}

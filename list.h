@@ -144,4 +144,5 @@ void freeAlloc();                                 // uvolni veskerou pamet, kter
 
 void IniTape();                                   // inicializuje pasku
 tErrors InsertEmptyItemTape();                    // vlozi prazny prvek na konec pasky 
+void WriteTape();
 #endif
