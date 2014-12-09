@@ -48,7 +48,6 @@ int parser() {
     if(insertFunListItemEmbed("copy") != E_OK) return E_INTERN;
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
-	WriteTape();
 	//free(TempVar);
 	BSTDispose(&TempTree);
 //	printf("eror je %d \n",error);
@@ -238,12 +237,14 @@ int blockList() {
 	return E_OK;
 }
 
-int commands() {
+int commands() 
+{
+	tVariable *glob;
+	tVariable *loc;
+	tParamList *par;
+
 	switch(T.type){
 		case T_ID:
-			tVariable *glob;
-			tVariable *loc;
-			tParamList *par;
 			if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 			Tape->last->instruction = ASSIGN;
 			if(afun == 1){                                 //ADDED pokud neni ve funkci kontroluje jen global

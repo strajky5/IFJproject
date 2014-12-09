@@ -402,7 +402,7 @@ tErrors InsertEmptyItemTape()                         // vlozeni prazdneho prvku
     return E_OK;                                                    // vracim e_ok
 }
 
-void WriteTape()
+/*void WriteTape()
 {
     while(Tape->active->next != NULL)
     {
@@ -412,4 +412,4 @@ void WriteTape()
         Tape->active = Tape->active->next;
     }
 
-}
+}*/
