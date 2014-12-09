@@ -1,6 +1,0 @@
-var
-a : integer;
-
-begin
-a := a + 5
-end.

@@ -1,9 +1,0 @@
-var a:integer;
-    r:real;
-    s:string;
-    b:boolean;
-begin 
-
-	if a+b
-	
-end.	

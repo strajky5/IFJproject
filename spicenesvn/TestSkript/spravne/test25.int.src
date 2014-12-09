@@ -1,9 +1,0 @@
-var a:integer;
-begin 
-
-	a:=5;
-	while a<10 do
-	 begin
-	 end	
-
-end.	

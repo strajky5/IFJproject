@@ -1,7 +1,0 @@
-var r:real;
-    s:string;
-begin 
-
-	r:= s+s
-	
-end.	
