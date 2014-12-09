@@ -1,0 +1,9 @@
+var a:integer;
+    r:real;
+    s:string;
+    b:boolean;
+begin 
+
+	b:= b>(b<>b>b)
+	
+end.	

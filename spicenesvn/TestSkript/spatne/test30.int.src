@@ -1,0 +1,11 @@
+var a:string;
+begin 
+
+	if a then
+	begin
+	end
+	else
+	begin
+	end
+	
+end.	

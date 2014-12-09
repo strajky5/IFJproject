@@ -1,0 +1,9 @@
+var a:boolean;
+    b:boolean;
+begin 
+
+	while a==b do
+	 begin
+	 end
+	
+end.	

@@ -1,0 +1,8 @@
+var a:integer;
+    r:real;
+    s:string;
+    b:boolean;
+begin 
+
+	a:= a+s	
+end.	

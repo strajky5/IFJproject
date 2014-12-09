@@ -1,0 +1,8 @@
+var a:integer;
+begin 
+
+	while a do
+	 begin
+	 end
+	
+end.	

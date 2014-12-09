@@ -1,0 +1,8 @@
+var a:boolean;
+begin 
+
+	while a do
+	 begin
+	 end
+	
+end.	

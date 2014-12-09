@@ -1,0 +1,6 @@
+function test() : integer;
+begin
+end;
+
+begin
+end.

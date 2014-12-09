@@ -1,0 +1,15 @@
+var a:integer;
+    r:real;
+    s:string;
+    b:boolean;
+begin 
+
+	if (s>s)>b then
+	begin
+	end
+	else
+	begin
+	end
+	
+end.	
+	

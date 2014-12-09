@@ -1,0 +1,14 @@
+var
+  a : integer;
+  b : integer;
+  function test() : integer;
+  var
+    a : integer;
+    b : integer;
+  begin
+    write('soooohardtest', a, 'evenharder', b)
+  end;
+
+begin
+  write('soooohardtest', a, 'evenharder', g)
+end.

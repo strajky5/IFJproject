@@ -1,0 +1,13 @@
+var
+a : integer;
+b : boolean;
+c : string;
+d : real;
+
+function test(p : real; o : integer; r : boolean; k : string) : integer;  
+  begin
+  end;
+
+begin
+  a := testd,a,b,c)
+end.

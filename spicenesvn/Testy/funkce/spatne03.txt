@@ -1,0 +1,12 @@
+var
+a : integer;
+b : boolean;
+c : real;
+
+function test(p : real) : integer;  
+  begin
+  end;
+
+begin
+  a := test(b)
+end.

@@ -1,0 +1,12 @@
+var a:integer;
+    
+begin 
+
+	if (a) then
+	begin
+	end
+	else
+	begin
+	end
+	
+end.	

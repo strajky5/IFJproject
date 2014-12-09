@@ -1,0 +1,13 @@
+var a:boolean;
+    b:boolean;
+    
+begin 
+
+	if a<((a>b)>b) then
+	begin
+	end
+	else
+	begin
+	end
+	
+end.	

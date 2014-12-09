@@ -1,0 +1,32 @@
+var
+c : integer;
+r : integer;
+
+
+function inoue(top : integer; lol : string) : real;
+var
+a : integer;
+e : real;
+d : boolean;
+c : string;
+g : boolean;
+f : real;
+begin
+end;
+
+function inou(inoue : integer; lol : string) : real;
+var
+c : boolean;
+g : string;
+f : real;
+begin
+inou := 5 + 5;
+write('Bla', f, 'Bla', f);
+readln(r)
+end;
+
+begin
+c := 5 + 5;
+readln(r);
+write('Bla', c, 'Bla', c)
+end. 
