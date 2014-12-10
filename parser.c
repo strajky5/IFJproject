@@ -3,6 +3,11 @@
 #include "parser.h"
 
 tErrors error;
+void constructOpStringLine1(string *dest, tVariable *operand);
+void constructOpStringLine2(string *dest, tVariable *operand);
+void constructInstStringLine1(string *dest, tInstruction instruction);
+void constructInstStringLine2(string *dest, tTapeItem *instruction);
+tErrors printTape(tTape *tape);
 extern tTape* Tape;
 int program();
 int function();
@@ -49,7 +54,10 @@ int parser() {
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
 	//free(TempVar);
+	printf("eror je %d \n",error);
+	error = printTape(Tape);
 	BSTDispose(&TempTree);
+	printf("eror je %d \n",error);
 //	printf("eror je %d \n",error);
 freeAlloc(); 
 	return error;
@@ -242,6 +250,12 @@ int commands()
 	tVariable *glob;
 	tVariable *loc;
 	tParamList *par;
+	string *name = allocate(sizeof(string));
+    tTapeItem *previous = Tape->last;
+    tVariable *op1 = allocate(sizeof(tVariable));
+    tVariable *op2 = allocate(sizeof(tVariable));
+    tVariable *result = allocate(sizeof(tVariable));
+    if((name == NULL) || (op1 == NULL) || (op2 == NULL) || (result == NULL)) return E_INTERN;
 
 	switch(T.type){
 		case T_ID:
@@ -302,10 +316,21 @@ int commands()
 				break;
 			}
 			if(!strCmpConstStr (&(T.s), "if")){ //if
+				tTapeItem *label;
+                tTapeItem *endelse;
+                tVariable *op11 = allocate(sizeof(tVariable));
+                tVariable *op22 = allocate(sizeof(tVariable));
+                if((op11 == NULL) || (op22 == NULL)) return E_INTERN;
+				
 				if((error = ExpParser()) != E_OK) return error; //vyraz
 				if (res != 3 ) return E_SEMB;
-				Tape->last->instruction = JUMP;
-				Tape->last->op2 = Tape->last->previous->result;
+				//ZAKONECNTOVANO if(InsertEmptyItemTape() != E_OK) return E_INTERN; 
+				Tape->last->instruction = JUMPN;
+                Tape->last->op1 = Tape->last->previous->result;
+                Tape->last->op2 = op2;
+                Tape->last->op2->type = TAPE_POINTER;
+                label = Tape->last;
+				
 				if((error = testToken(T_KEYWORD)) == E_OK){
 					if(strCmpConstStr (&(T.s),"then")) return E_SYN; //then
 				}
@@ -320,8 +345,23 @@ int commands()
 				gettoken();
 				if((error = blockList()) != E_OK) return error; //blocklist
 				gettoken();
+				
+				Tape->last->instruction = JUMPN;
+                Tape->last->op1 = op11;
+                Tape->last->op1->type = O_BOOL;
+                Tape->last->op1->value.bval = false;
+                if(strInit(&(Tape->last->op1->name)) != STR_SUCCESS) return E_INTERN;
+                Tape->last->op2 = op22;
+                Tape->last->op2->type = TAPE_POINTER;
+                endelse = Tape->last;
+				
 				if((error = testToken(T_KEYWORD)) != E_OK) return error;
 				if(strCmpConstStr (&(T.s),"else")) return E_SYN;
+				
+				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = NOP;
+                label->op2->value.tape_pointer = Tape->last;
+				
 				gettoken();
 				if((error = testToken(T_KEYWORD)) != E_OK) return error;
 				if(strCmpConstStr (&(T.s),"begin")) return E_SYN; //begin slozeneho prikazu
@@ -332,6 +372,10 @@ int commands()
 				    if (testToken(T_SEMICOLON) != E_OK) return E_SYN;
 				    semi = 1;
 			    }
+				
+				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = NOP;
+                endelse->op2->value.tape_pointer = Tape->last;
 
 
 				break;
@@ -339,10 +383,25 @@ int commands()
 
 			}
 		    if(!strCmpConstStr (&(T.s), "while")){
+				
+				 if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = NOP;
+                tTapeItem *label1;
+                tTapeItem *label2 = Tape->last;             // ukazatel na pasku kam se bude cyklus vracet
+                tVariable *op11 = allocate(sizeof(tVariable));
+                tVariable *op22 = allocate(sizeof(tVariable));
+                if((op11 == NULL) || (op22 == NULL)) return E_INTERN;
+				
                 if((error = ExpParser()) != E_OK) return error; //vyraz
                 if (res != 3 ) return E_SEMB;
-				Tape->last->instruction = JUMP;
-				Tape->last->op2 = Tape->last->previous->result;
+				
+				//ZAKONECNTOVANO  if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = JUMPN;
+                Tape->last->op1 = Tape->last->previous->result;
+                Tape->last->op2 = op22;
+                Tape->last->op2->type = TAPE_POINTER;
+                label1 = Tape->last;  
+				
 				if((error = testToken(T_KEYWORD)) == E_OK){
 					if(strCmpConstStr (&(T.s),"do")) return E_SYN; //begin slozeneho prikazu
 				}
@@ -353,7 +412,6 @@ int commands()
 					if(strCmpConstStr (&(T.s),"begin")) return E_SYN; //begin slozeneho prikazu
 				}
 				else{
-//					printf("tento\n");
 					return error;
 				}
 				gettoken();
@@ -363,6 +421,20 @@ int commands()
 				    if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				    semi = 1;
 			    }
+				
+				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = JUMPN;
+                Tape->last->op1 = op1;
+                Tape->last->op1->type = O_BOOL;
+                Tape->last->op1->value.bval = false;
+                if(strInit(&(Tape->last->op1->name)) != STR_SUCCESS) return E_INTERN;
+                Tape->last->op2 = op2;
+                Tape->last->op2->type = TAPE_POINTER;
+                Tape->last->op2->value.tape_pointer = label2;     // nepodmineny skok zpet na zacatek vyhodnocovani podminky cyklu
+                if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = NOP;                    // instrukce, na kterou se skoci v pripade nesplneni podminky whilu
+                label1->op2->value.tape_pointer = Tape->last;
+				
 				break;
 			}
 			if (!strCmpConstStr (&(T.s), "readln")) {
@@ -565,4 +637,192 @@ int localDecl() { //za decl nebrat token
 		    if ((error = localDecl()) != E_OK) return error;	//dalsia promena?
 		return E_OK;
 }
+void constructOpStringLine1(string *dest, tVariable *operand) {
+    switch(operand->type) {
+    case O_BOOL:
+        strFromChar(dest, "BOOLEAN");
+        break;
+    case O_INT:
+        strFromChar(dest, "INT");
+        break;
+    case O_REAL:
+        strFromChar(dest, "DOUBLE");
+        break;
+    case O_STRING:
+        strFromChar(dest, "STRING");
+        break;
+    case NONTRM:
+        strFromChar(dest, "NONTRM");
+        break;
+    case O_NOTDATA:
+        strFromChar(dest, "O_NOTDATA");
+        break;
+    case FUNCTION:
+        strFromChar(dest, "FUNCTION");
+        break;
+    case TAPE_POINTER:
+        strFromChar(dest, "TAPE_POINTER");
+        break;
+    case PARAM_POINTER:
+        strFromChar(dest, "PARAM_POINTER");
+        break;
+    }
+}
+
+void constructOpStringLine2(string *dest, tVariable *operand) {
+    char str[100];      // prasarna, ale debug
+
+    switch(operand->type) {
+    case O_BOOL:
+        if(operand->value.bval == true) {
+            strFromChar(dest, "true");
+        } else {
+            strFromChar(dest, "false");
+        }
+        break;
+    case O_INT:
+        sprintf(str, "%d", operand->value.ival);
+        strFromChar(dest, str);
+        break;
+    case O_REAL:
+        sprintf(str, "%.2f", operand->value.rval);
+        strFromChar(dest, str);
+        break;
+    case O_STRING:
+        strCopystring(dest, &(operand->value.sval));
+        break;
+    case NONTRM:
+        strFromChar(dest, "nonterm");
+        break;
+    case O_NOTDATA:
+        strFromChar(dest, "O_NOTDATA");
+        break;
+    case FUNCTION:
+        strCopystring(dest, &(operand->name));
+        break;
+    case TAPE_POINTER:
+        sprintf(str, "%llx", (long long)operand->value.tape_pointer);
+        strFromChar(dest, str);
+        break;
+    case PARAM_POINTER:
+        sprintf(str, "%llx", (long long)operand->value.param_pointer);
+        strFromChar(dest, str);
+        break;
+
+    }
+}
+
+void constructInstStringLine1(string *dest, tInstruction instruction) {
+    switch(instruction) {
+    case ADD:
+        strFromChar(dest, "ADD");
+        break;
+    case MUL:
+        strFromChar(dest, "MUL");
+        break;
+    case SUB:
+        strFromChar(dest, "SUB");
+        break;
+    case DIV:
+        strFromChar(dest, "DIV");
+        break;
+    case EQ:
+        strFromChar(dest, "EQ");
+        break;
+    case NEQ:
+        strFromChar(dest, "NEQ");
+        break;
+    case EQL:
+        strFromChar(dest, "EQL");
+        break;
+    case EQM:
+        strFromChar(dest, "EQM");
+        break;
+    case MORE:
+        strFromChar(dest, "MORE");
+        break;
+    case LESS:
+        strFromChar(dest, "LESS");
+        break;
+    case NOP:
+        strFromChar(dest, "NOP");
+        break;
+    case JUMPN:
+        strFromChar(dest, "JUMPN");
+        break;
+    case ASSIGN:
+        strFromChar(dest, "ASSIGN");
+        break;
+	  case CALL:
+        strFromChar(dest, "CALL");
+        break;
+    case FUNC:
+        strFromChar(dest, "FUNC");
+        break;
+    }
+}
+
+void constructInstStringLine2(string *dest, tTapeItem *instruction) {
+    char str[100];      // prasarna, ale debug
+    sprintf(str, "%llx", (long long)instruction);
+    strFromChar(dest, str);
+}
+
+tErrors printTape(tTape *tape) {
+
+    if(tape == NULL) return E_INTERN;
+    if(tape->first == NULL) return E_INTERN;
+
+    tTapeItem *iter = tape->first;
+    string inst;
+    string op1;
+    string op2;
+    string result;
+
+    if(strInit(&inst) != STR_SUCCESS) return E_INTERN;
+    if(strInit(&op1) != STR_SUCCESS) return E_INTERN;
+    if(strInit(&op2) != STR_SUCCESS) return E_INTERN;
+    if(strInit(&result) != STR_SUCCESS) return E_INTERN;
+
+    printf("||======================================================================||\n");
+    printf("||\tINST\t|\tOP1\t|\tOP2\t|\tRESULT\t||\n");
+    printf("||======================================================================||\n");
+
+    while(iter != NULL) {
+
+        // Line 1
+        strClear(&inst);
+        strClear(&op1);
+        strClear(&op2);
+        strClear(&result);
+
+        constructInstStringLine1(&inst, iter->instruction);
+        if(iter->op1 != NULL) constructOpStringLine1(&op1, iter->op1);
+        if(iter->op2 != NULL) constructOpStringLine1(&op2, iter->op2);
+        if(iter->result != NULL) constructOpStringLine1(&result, iter->result);
+        printf("||\t%s\t|\t%s\t|\t%s\t|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
+
+        // Line 2
+        strClear(&inst);
+        strClear(&op1);
+        strClear(&op2);
+        strClear(&result);
+
+        constructInstStringLine2(&inst, iter);
+        if(iter->op1 != NULL) constructOpStringLine2(&op1, iter->op1);
+        if(iter->op2 != NULL) constructOpStringLine2(&op2, iter->op2);
+        if(iter->result != NULL) constructOpStringLine2(&result, iter->result);
+        printf("||\t%s\t|\t%s\t|\t%s\t|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
+
+        printf("||======================================================================||\n");
+        iter = iter->next;
+    }
+
+    strFree(&inst);
+    strFree(&op1);
+    strFree(&op2);
+    strFree(&result);
+	return E_OK;
+}
+
 

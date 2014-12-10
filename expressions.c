@@ -9,7 +9,7 @@
 
 tOperand res;
 bool flag; 
-
+int reduct;
 //######################### Konvertovani Tokenu ##########################
 //budeme identifikovat co tam je .. jestli ID nebo realcni op., atd. a prepiseme ve strukture T.type aktualni typ tokenu
 tErrors ConvertToken(tExpType *type)
@@ -180,7 +180,7 @@ tErrors SearchFun()
         temp->value.param_pointer = parameterList->first;
 
         Tape->last->op1 = temp;        // ulozeni ukazatele na tVariable polozku, ktera obsahuje ukazatel na funkci na pasce 
-        Tape->last->instruction = CALL;   // instrukce je funkce
+        Tape->last->instruction = FUNCTION;   // instrukce je funkce
         Tape->last->op2 = NULL;
         Tape->last->result = NULL; 
 
@@ -548,6 +548,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
     tElemPtr TopIstruction;         //provadena instrukce mezi OP1|OP2
     tErrors er;                     //promenna typu tErrors
 
+
     ExpStackTop(S, &toptype);		//vraci hodnotu prvniho prvku zasobniku
  
     if (toptype == ID) 	//vstup=ID, pravidlo E->ID
@@ -558,6 +559,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
 
     if (sign == Q)     //vstup = ')', pravidlo E->(E) (ale ')' nemam na zasobniku)
     {  
+	reduct =1;
         if (toptype != NONTERM)      //kdyz neni na vrcholu zasobnika NONTERM
             return E_SYN;            //vraci error E_SYN
         ExpStackSecTop(S, &toptype); //vraci hodnotu druheho prvku
@@ -574,30 +576,39 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
         else 						//kdyz je na zasobniku nonterm
         {  
             ExpStackTopPoint (S, &TopOp);                       // druhy operand OP2 (prvni prvek na STACKU)
-            ExpStackInstructionTopPoint (S, &TopIstruction);    // instrukce (druhy prvek na STACKU)
-            if ((TopIstruction->data != DOLAR))
+			ExpStackInstructionTopPoint (S, &TopIstruction);    // instrukce (druhy prvek na STACKU)
+            if (TopIstruction->data != DOLAR)
             {    //printf("tady nemam co delat \n");
+			printf(" delat \n");
                 ExpStackSecTopPoint (S, &SecTopOp);                 // prvni operand OP1 (treti prvek na STACKU)
-           
+           reduct =1;
                 //printf("OP2: %d OP1:%d \n",TopOp->tempVarPtr->type,SecTopOp->tempVarPtr->type);
                 er = ExpParserSem(&(TopOp->tempVarPtr->type),&(SecTopOp->tempVarPtr->type),&(TopIstruction->instruction)); // aplikuju semanticka pravidla
                 if (er == E_SEMB)       //pokud je semantika vyrazu nespravana
                 {
                     return er;          //koncim s chybou
                 }
-
+				Tape->last->op2 = S->Top->tempVarPtr;
                 ExpStackPop(S);         
-                Tape->last->op2 = S->Top->tempVarPtr;	
+                	
             }
             else
             {
+			printf("co %d \n",reduct);
                // printf("OP2: %d INST:%d \n",TopOp->tempVarPtr->type,TopIstruction->data);
                 if (TopOp->tempVarPtr->type != O_BOOL)
                     return E_SEMB;
-                ExpStackPop(S);
+					printf("co %d \n",reduct);
+                if (reduct != 1){
                 Tape->last->result = S->Top->tempVarPtr;
                 Tape->last->op1 = NULL;
                 Tape->last->op2 = NULL;
+				
+				er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+                if (er == E_INTERN)
+			    return er;
+				}
+				ExpStackPop(S);
                 return E_OK;
             }
         }
@@ -608,6 +619,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
              return E_SYN;           //vraci error E_SYN
         else 						 //pokud tam neni neterminal
         {
+		printf("tady  \n");
             Tape->last->instruction = S->Top->instruction; 
             ExpStackPop (S);		 //odstranim dany operand
         }
@@ -617,10 +629,11 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
              return E_SYN;           //vraci error E_SYN
         else
         {
+		printf(" nemam  \n");
             Tape->last->op1 = S->Top->tempVarPtr; 
             ExpStackPop (S);		 //odstranim dany operand
         }
-
+		printf("kolko krat? \n");
         ExpStackPush(S, NONTERM, NULL);    //vlozim zpatky na zasobnik novy neterminal
         Tape->last->result = S->Top->tempVarPtr; // ukladam vysledek OP1 a OP2 do result na pasku	
         er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
@@ -790,7 +803,7 @@ int ExpParser()
         if ((type == KEYWORD) && (stack_type == DOLAR)) // pokud je typ KEYWORD nebo DOLAR
         {   
             if(flag == FALSE)
-            {  
+            {   printf("%d",sign);
                 er = ExpStackReduct(&S, sign);
                 if (er)                         //pokud redukce neprobehla v poradku
                 {
