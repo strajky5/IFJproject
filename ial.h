@@ -31,6 +31,9 @@ void swap(char *a, char *b);
 int partition (char *s, int left, int right);
 void quickSort ( char *string, int left, int right);
 
-
+//int findBM(char *pattern_str, int length_p, char *find_str, int length_f);
+//void prefixes_occurence(char *pattern_str, int length, int Array_Pattern[]);
+//void suffixes(char *pattern_str, int length, int *suff);
+//void prefixes_pattern(char *pattern_str, int length, int Array_Occurence[]);
 
 #endif

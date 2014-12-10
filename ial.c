@@ -95,7 +95,7 @@ int partition (char *s, int left, int right)
     i = left;
     j = right+1;
 
-   while(TRUE)
+   while(1)
    {
         do ++i; while(s[i] <= pivot && i <= right);
         do --j; while(s[j] > pivot);
@@ -108,16 +108,16 @@ int partition (char *s, int left, int right)
 }
 void quickSort ( char *string, int left, int right)
 {
-    int i;
+    int j;
     
     if ( left < right)
     {
-        j = partition( s, left, right);
-        quickSort( s, left, i-1);
-        quickSort( s, j+1, right);
+        j = partition( string, left, right);
+        quickSort( string, left, j-1);
+        quickSort( string, j+1, right);
     }
 }
-
+/*
 //########## BOYER-MOOREUV ALGORITMUS ################
 //Boyer-Mooreov algoritmus vyhladavania zadaneho pattern_stru "pattern_str" s poctom znakov "length_p"
 //v retazci "find_str" s poctom znakov "length_f"
@@ -191,9 +191,9 @@ void suffixes(char *pattern_str, int length, int *suff)
 //funkcia na vytvorenie pomocneho pola pre BM algoritmus
 void prefixes_pattern(char *pattern_str, int length, int Array_Occurence[]) 
 {
-    for (int i = 0; i < MAX_VELKOST_ABECEDY; i++)
+    for (int i = 0; i < MAX_LENGTH_ABC; i++)
         Array_Occurence[i] = length;
     for (i = 0; i < length - 1; i++)
         Array_Occurence[pattern_str[i]] = length - i - 1;
 }
-
+*/
