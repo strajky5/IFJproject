@@ -118,3 +118,82 @@ void quickSort ( char *string, int left, int right)
     }
 }
 
+//########## BOYER-MOOREUV ALGORITMUS ################
+//Boyer-Mooreov algoritmus vyhladavania zadaneho pattern_stru "pattern_str" s poctom znakov "length_p"
+//v retazci "find_str" s poctom znakov "length_f"
+//funkcia vracia index prveho znaku najdeneho pattern_stru v retazci 
+//(v pripade neuspechu vyhladavania vracia -1)
+// pattern_str - vzorovy string, length_p - delka vzoroveho stringu     -- v tomto stringu hledam
+// find_str - hledany podstring, length_f - delka hledaneho podstringu  -- tento  string hledam
+int findBM(char *pattern_str, int length_p, char *find_str, int length_f) 
+{
+    int Array_Pattern[MAX_LENGTH_pattern_str];              // ciselne pole velikosti delky vzoroveho stringu
+    int Array_Occurence[MAX_LENGTH_ABC];                    // ciselne pole velikosti abecedy 
+ 
+    prefixes_occurence(pattern_str, length_p, Array_Pattern);   //
+    prefixes_pattern(pattern_str, length_p, Array_Occurence);   //
+ 
+    int j = 0;
+    while (j <= length_f - length_p) {
+        for (int i = length_p - 1; i  >= 0 && pattern_str[i] == find_str[i + j]; i--);
+        if (i < 0) 
+        {
+            return j;
+            //j += Array_Pattern[0];
+        }
+        else if (Array_Pattern[i] >= Array_Occurence[find_str[i + j]] - length_p + 1 + i) 
+            j += Array_Pattern[i];
+        else 
+            j += Array_Occurence[find_str[i + j]] - length_p + 1 + i;
+    }
+    return 0;   // pokud BMA nenajdepodreteec, vraci o
+}
+//funkcia na vytvorenie pomocneho pola pre BM algoritmus 
+void prefixes_occurence(char *pattern_str, int length, int Array_Pattern[]) 
+{
+    int suff[MAX_LENGTH_pattern_str];
+    suffixes(pattern_str, length, suff);
+
+    for (int i = 0; i  <  length; i++) 
+        Array_Pattern[i] = length;
+
+    int j = 0;
+    
+    for (i = length - 1; i >= -1; i--)
+        if (i == -1 || suff[i] == i + 1)
+            for (; j < length - 1 - i; j++)
+                if (Array_Pattern[j] == length) Array_Pattern[j] = length - 1 - i;
+    for (i = 0; i  <= length - 2; i++) 
+        Array_Pattern[length - 1 - suff[i]] = length - 1 - i;
+}
+//funkcia na vytvorenie pomocneho pola pre BM algoritmus 
+//(pre funkciu, ktora vytvara pomocne pole pre BM algoritmus)
+void suffixes(char *pattern_str, int length, int *suff) 
+{
+    int f;
+    suff[length - 1] = length;
+    int g = length - 1;
+
+    for (int i=length - 2; i >= 0; --i) 
+    {
+        if ( i > g && suff[i + length - 1 - f]  < i - g)
+            suff[i] = suff[i + length - 1 - f];
+        else 
+        {
+            if (i < g) g = i;
+                f = i;
+            while (g  >= 0 && pattern_str[g] == pattern_str[g + length - 1 - f]) 
+                g--;
+            suff[i] = f - g;
+        }
+    }
+}
+//funkcia na vytvorenie pomocneho pola pre BM algoritmus
+void prefixes_pattern(char *pattern_str, int length, int Array_Occurence[]) 
+{
+    for (int i = 0; i < MAX_VELKOST_ABECEDY; i++)
+        Array_Occurence[i] = length;
+    for (i = 0; i < length - 1; i++)
+        Array_Occurence[pattern_str[i]] = length - i - 1;
+}
+
