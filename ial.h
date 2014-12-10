@@ -26,4 +26,8 @@ tVariable* BSTSearch (tBSTNodePtr RootPtr, string name);
 void BSTInit (tBSTNodePtr *RootPtr);
 void BSTDispose (tBSTNodePtr *RootPtr);
 
+void swap(char *a, char *b);
+int partition (char *s, int left, int right);
+void quickSort ( char *string, int left, int right);
+
 #endif

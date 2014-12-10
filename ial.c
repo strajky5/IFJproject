@@ -7,7 +7,7 @@
 
 
 
-
+//############# BINARNI VYHLEDAVACI STROM ##############
 void BSTInit (tBSTNodePtr *RootPtr) 
 {
     *RootPtr = NULL;
@@ -57,14 +57,11 @@ tErrors BSTInsert (tBSTNodePtr* RootPtr, string name, tVariable* var)
         temp->LPtr = NULL;
         temp->RPtr = NULL;
         *RootPtr = temp;
-
     }
     else if (strCmpstring(&(*RootPtr)->tree_data->name, &name) > 0)          
         BSTInsert (&(*RootPtr)->LPtr, name,var);
     else if (strCmpstring(&(*RootPtr)->tree_data->name, &name) < 0)
         BSTInsert (&(*RootPtr)->RPtr, name,var);
-
-//	printf("type: %d\n", (*RootPtr)->tree_data->type);
 
     return E_OK;
 }
@@ -82,4 +79,42 @@ void BSTDispose (tBSTNodePtr *RootPtr)
     return;
 }
 
+
+//################### QUICK SORT #####################
+void swap(char *a, char *b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+int partition (char *s, int left, int right)
+{
+    int pivot,i,j;
+    pivot = s[left];
+    i = left;
+    j = right+1;
+
+   while(TRUE)
+   {
+        do ++i; while(s[i] <= pivot && i <= right);
+        do --j; while(s[j] > pivot);
+        if(i >= j)
+            break;
+        swap(&s[i], &s[j]);
+   }
+   swap(&s[left], &s[j]);
+   return j;
+}
+void quickSort ( char *string, int left, int right)
+{
+    int i;
+    
+    if ( left < right)
+    {
+        j = partition( s, left, right);
+        quickSort( s, left, i-1);
+        quickSort( s, j+1, right);
+    }
+}
 
