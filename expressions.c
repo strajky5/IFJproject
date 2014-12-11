@@ -611,11 +611,11 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
                     temp->type->O_BOOL;
                     Tape->instruction = MORE;
                     Tape->last->op2 = temp;
-				
+				}
 				    er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
                     if (er == E_INTERN)
 			            return er;
-				}
+				
 				ExpStackPop(S);
                 return E_OK;
             }
