@@ -36,6 +36,7 @@ void stackinit(TStack *stack);								//funkce na inicializaci zasobniku
 tErrors stackPush(TStack *stack,tParamItem *op);			// pro pushnuti na zasobnik
 tParamItem* TStackTopPop(TStack *stack);					// pro vziti ze zasobniku
 void StackDeleteDataDelete(TStack *stack);					// pro uvolneni zasobniku z pameti
+quickSort( int a[], int l, int r);							// pro serazeni prvku pole
 int partition( int a[], int l, int r);						// pomovna funkce pro quicksort
 tParamItem *SearchStackName(string*Search);
 string *conc(string*s1,string*s2);
@@ -113,22 +114,33 @@ tErrors interpret()											// interpret
 			}
 			else if(strCmpstring(&Tape->active->op1->name, "find"))								// pokud je funkce find
 			{
-				int position=0;
+				int i=0;																		// tak si vytvorim pocitadlo
+				char* st=stack.top->op1->value.sval.str;											// a ukazatel na pole (string)
+				char* serch=stack.top->op1->next->value.sval.str;									// a na string hledany
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
-				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error																		
-				
-				char* pattern_str = stack.top->op1->value.sval.str;								
-				char* find_str = stack.top->op1->next->value.sval.str;							
-				
-				//position = findBM(pattern_str,strGetLength(&stack.top->op1->value.sval), find_str, strGetLength(&stack.top->op1->next->value.sval.str));
+				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;						// pokud neni druchu paramter string error
+				while (st[i]!=st[strGetLength(&stack.top->op1->value.sval)])						// dokud nejsi na konci stringu tak cykli
+				{
+					if(st[i]==serch[0])															// pokud se schoduje s charem prvnim hledaneho stringu
+					{
+						int i1=0;																// tak vytvorim si druhe pocitadlo
+						while(st[i+i1]==serch[i1]) i1++;										// dokud se schoduji posunuj se a pocitej
+						if(i1==strGetLength(&stack.top->op1->value.sval))
+                            {Tape->active->op1->value.ival=i;
+                            Tape->active->op1->type=O_INT;
+                            break;}
+					}																			// pokud se schoduji velikosti stringu tak vrat pozici do op 2
+					if(st[i+strGetLength(&stack.top->op1->next->value.sval)-1]=='/0') break;				// pokud uz je mensi nez delka hledaneho stringu tak vyskoc
+					i++;																		// navys pocitadlo
+				}
 
-				Tape->active->op1->value->ival = position;
-				
 			}
 			else if(strCmpstring(&Tape->active->op1->name, "sort"))								// pokud je sort
 			{
+				char*pole=stack.top->op1->value.sval.str;											// tak si vytvorim pole znaku se srtingem
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
-				quickSort(stack.top->op1->value.sval.str, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
+				quickSort( (int *)pole, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
+				Tape->active->op1->value.sval.str=(char*)pole;										// nini nahraji toto pole do op 2
 				Tape->active->op1->type=O_STRING;												// a nastavim typ na string
 
 			}
@@ -1542,6 +1554,37 @@ void StackDeleteDataDelete(TStack *stack)                                       
     return;
 }
 
+int quickSort( int a[], int l, int r)
+{
+   int j;
+
+   if( l < r )
+   {
+   	// divide and conquer
+        j = partition( a, l, r);
+       quickSort( a, l, j-1);
+       quickSort( a, j+1, r);
+   }
+
+}
+
+
+
+int partition( int a[], int l, int r) {
+   int pivot, i, j, t;
+   pivot = a[l];
+   i = l; j = r+1;
+
+   while( 1)
+   {
+   	do ++i; while( a[i] <= pivot && i <= r );
+   	do --j; while( a[j] > pivot );
+   	if( i >= j ) break;
+   	t = a[i]; a[i] = a[j]; a[j] = t;
+   }
+   t = a[l]; a[l] = a[j]; a[j] = t;
+   return j;
+}
 
 tParamItem *SearchStackName(string*Search)
 {
