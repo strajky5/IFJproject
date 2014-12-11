@@ -1,3 +1,6 @@
+#ifndef INT
+#define INT
+
 #include "list.h"
 #include "str.h"
 #include "ial.h"
@@ -23,5 +26,5 @@ void StackDeleteDataDelete(TStack *stack);					// pro uvolneni zasobniku z pamet
 tParamItem *SearchStackName(string*Search);
 string *conc(string*s1,string*s2);
 tErrors interpret();
-
+#endif 
 
