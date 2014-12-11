@@ -547,6 +547,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
     tElemPtr SecTopOp;              //zpracovavany OP1 
     tElemPtr TopIstruction;         //provadena instrukce mezi OP1|OP2
     tErrors er;                     //promenna typu tErrors
+	tVariable *temp;
 
 
     ExpStackTop(S, &toptype);		//vraci hodnotu prvniho prvku zasobniku
@@ -607,9 +608,9 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
                         return E_INTERN;
                     if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
                         return E_INTERN;
-                    temp->value->bval = TRUE;
-                    temp->type->O_BOOL;
-                    Tape->instruction = MORE;
+                    temp->value.bval = TRUE;
+                    temp->type = O_BOOL;
+                    Tape->last->instruction = MORE;
                     Tape->last->op2 = temp;
 				}
 				    er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
