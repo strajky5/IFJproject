@@ -306,7 +306,7 @@ int commands()
 				Tape->last->op1 = glob;
 			}
 			Tape->last->op2 = Tape->last->previous->result;
-			printf("v parseri %d \n",Tape->last->op2);
+			printf("parser adresa resultu v parseri %d \n",Tape->last->op2);
 			if ((strCmpConstStr (&(T.s), "end"))) {
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				semi = 1;

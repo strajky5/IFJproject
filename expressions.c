@@ -587,7 +587,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
 			ExpStackInstructionTopPoint (S, &TopIstruction);    // instrukce (druhy prvek na STACKU)
             if (TopIstruction->data != DOLAR)
             {    //printf("tady nemam co delat \n");
-			printf(" delat \n");
+			//printf(" delat \n");
                 ExpStackSecTopPoint (S, &SecTopOp);                 // prvni operand OP1 (treti prvek na STACKU)
            reduct =1;
                 //printf("OP2: %d OP1:%d \n",TopOp->tempVarPtr->type,SecTopOp->tempVarPtr->type);
@@ -602,13 +602,13 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
             }
             else
             {
-			printf("co %d \n",reduct);
+			//printf("co %d \n",reduct);
                if (flag == FALSE)
 			   {
 			   // printf("OP2: %d INST:%d \n",TopOp->tempVarPtr->type,TopIstruction->data);
                 if (TopOp->tempVarPtr->type != O_BOOL)
                     return E_SEMB;
-					printf("co %d \n",reduct);
+				//	printf("co %d \n",reduct);
                 if (reduct != 1)
                 { 
                     Tape->last->op1 = S->Top->tempVarPtr;
@@ -652,7 +652,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
              return E_SYN;           //vraci error E_SYN
         else 						 //pokud tam neni neterminal
         {
-		printf("tady  \n");
+		//printf("tady  \n");
             Tape->last->instruction = S->Top->instruction; 
             ExpStackPop (S);		 //odstranim dany operand
         }
@@ -662,14 +662,14 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
              return E_SYN;           //vraci error E_SYN
         else
         {
-		printf(" nemam  \n");
+		//printf(" nemam  \n");
             Tape->last->op1 = S->Top->tempVarPtr; 
             ExpStackPop (S);		 //odstranim dany operand
         }
-		printf("kolko krat? \n");
+		//printf("kolko krat? \n");
         ExpStackPush(S, NONTERM, NULL);    //vlozim zpatky na zasobnik novy neterminal
         Tape->last->result = S->Top->tempVarPtr; // ukladam vysledek OP1 a OP2 do result na pasku	
-		printf("exp : %d \n",S->Top->tempVarPtr);
+		printf("exp adreasa resultu v expe : %d \n",S->Top->tempVarPtr);
         er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
         if (er == E_INTERN)
             return er;
