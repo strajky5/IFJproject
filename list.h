@@ -22,6 +22,11 @@ typedef enum {                  // typ operandu na pasku
     PARAM_POINTER               // 8 ukazatel na jiny prvek parametru funkce
 } tOperand;
 
+typedef enum {                  // typ operandu na pasku
+    NODATA,                     // 0 nema hodnotu 
+    DATA                        // 1 ma hodnotu
+} tBool;
+
 typedef enum {                  // instrukce na pasku
     ADD,                        // 0 +
     MUL,                        // 1 *
@@ -46,7 +51,7 @@ typedef union {                 // hodnota daneho tokenu po konvertovani
     int ival;                   // promenna pro integer
     double rval;                // promenna pro real
     bool bval;                  // promenna pro boolean
-    bool valFull;               // ma hodnotu ?
+    tBool valFull;              // ma/nema hodnutu
     string sval;                // promenna pro string
     tTapeItem *tape_pointer;    // typ ukazatel pro vysledky na pasce
     tParamItem *param_pointer;  // typ ukazatel pro vysledky parametru funkce

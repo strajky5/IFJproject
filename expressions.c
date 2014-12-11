@@ -176,7 +176,7 @@ tErrors SearchFun()
         
         temp->type = FUNCTION;          // ulozeni do instrukce resultu ze je to funkce
         temp->name = FunPtr->name;
-        //temp->value.tape_pointer = FunPtr->tape_ptr;   // vlozeni do value ukazatele, kde je funkce na pasce 
+        temp->value.tape_pointer = FunPtr->tape_ptr;   // vlozeni do value ukazatele, kde je funkce na pasce 
         temp->value.param_pointer = parameterList->first;
 
         Tape->last->op1 = temp;        // ulozeni ukazatele na tVariable polozku, ktera obsahuje ukazatel na funkci na pasce 
@@ -433,6 +433,7 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     return E_INTERN;
                 temp->tempVarPtr->type = O_INT;									//operand typu O_INT
                 temp->tempVarPtr->value.ival = strtol(T.s.str,NULL, 10); 
+                temp->tempVarPtr->value.valFull = DATA;
                 break;
 
             case T_REAL :			// push na stack token typu REAL, alokace  mistro pro ulozeni jmena, typu a hodnoty tokenu
@@ -442,6 +443,7 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     return E_INTERN;
                 temp->tempVarPtr->type = O_REAL;								//operand typu O_REAL
                 temp->tempVarPtr->value.rval = strtod(T.s.str, NULL);	
+                temp->tempVarPtr->value.valFull = DATA;
                 break;
         																			
             case T_STRING :			// push na stack token typu STRING, alokace  mistro pro ulozeni jmena, typu a hodnoty tokenu
@@ -454,6 +456,7 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     return E_INTERN;
                 if (strCopystring(&(temp->tempVarPtr->value.sval), &(T.s)) == STR_ERROR)
                     return E_INTERN;
+                temp->tempVarPtr->value.valFull = DATA;
                 break;
 
             case T_KONST :			// push na stack token typu KONST - BOOL, alokace  mistro pro ulozeni jmena, typu a hodnoty tokenu											//konstanty ukladam jako true nebo false
@@ -468,6 +471,7 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     temp->tempVarPtr->value.bval = false;                     //uloz hodnotu operandu jako false
                 else
                     return E_SYN;                                             //vraci error E_SYN
+                temp->tempVarPtr->value.valFull = DATA;
                 break;
            default : break;
         }
@@ -475,7 +479,10 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
     temp->data = val; 				// do data vlozim  interni typ precedencni tabulky
     temp->rptr = L->Top;			// ukazatel bud ukazovat na vrchol zasobniku
     if(T.type == T_ID)              // pokud typ tokenu je ID (nejaka promenna) 
+    {
         temp->tempVarPtr = item;    // uloz mi ukazatel na promennou do stromu LBVS/GBVS
+        temp->tempVarPtr->value.valFull = NODATA;
+    }
     L->Top = temp;					// ulozeni prvku do ukazatele na vrchol zasobniku
 
     return E_OK;

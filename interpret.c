@@ -25,7 +25,7 @@ tErrors interpret()											// interpret
 		{
 printf("01 \n");
 
-	/*		if(Tape->active->op2->value.valFull==FALSE|| phodnota->value.valFull==FALSE )
+	/*		if(Tape->active->op2->value.valFull==NODATA|| phodnota->value.valFull==NODATA )
 			{
                 return E_RUNX;
 			}*/
@@ -173,14 +173,14 @@ printf("01 \n");
 
 			if(hodnota!=NULL)
             {
-                if(hodnota->value.valFull==FALSE )
+                if(hodnota->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
             }
             else
             {
-                if(Tape->active->op1->value.valFull==FALSE )
+                if(Tape->active->op1->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
@@ -188,14 +188,14 @@ printf("01 \n");
 
             if(phodnota!=NULL)
             {
-                if(phodnota->value.valFull==FALSE )
+                if(phodnota->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
             }
             else
             {
-                if(Tape->active->op2->value.valFull==FALSE )
+                if(Tape->active->op2->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
@@ -225,7 +225,7 @@ printf("01 \n");
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ string vrat chybu
 				Tape->active->op1->value.ival=strGetLength(&stack.top->op1->value.sval);			// do operandu dva nahrani vysledek
 				Tape->active->op1->type=O_INT;													// a typ
-                Tape->active->op1->value.valFull=TRUE;
+                Tape->active->op1->value.valFull=DATA;
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "copy")) //// nevim jstly funguje		// pokud je copy
 			{
@@ -248,7 +248,7 @@ printf("01 \n");
 				pomocny.allocSize=sizeof(char)*pocet;											// a jakou velikost pameti potrebuje
 				strCopystring(&pomocny, &Tape->active->op1->value.sval);							// nini ho nahraji do op2
 				Tape->active->op1->type=O_STRING;												// atyp prepisi na string
-                Tape->active->op1->value.valFull=TRUE;
+                Tape->active->op1->value.valFull=DATA;
 
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "find"))								// pokud je funkce find
@@ -270,7 +270,7 @@ printf("01 \n");
 			/*	if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
 				quickSort(stack.top->op1->value.sval.str, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
 			*/	/*Tape->active->op1->type=O_STRING;		*/										// a nastavim typ na string
-   /*             Tape->active->op1->value.valFull=TRUE;
+   /*             Tape->active->op1->value.valFull=DATA;
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "readln"))							// pokud je readln
 			{
@@ -290,7 +290,7 @@ printf("01 \n");
 								break;
 					default : return E_RUNX;
 				}
-                Tape->active->op1->value.valFull=TRUE;
+                Tape->active->op1->value.valFull=DATA;
 			}
 			else if(Tape->active->instruction==CALL)											// kdyz je to funkce vlastni tak je tam call
 			{
@@ -369,7 +369,7 @@ printf("01 \n");
 				}
 
 				else return E_INTERN;
-                Tape->active->result->value.valFull=TRUE;
+                Tape->active->result->value.valFull=DATA;
 
 	   		}
 	   		else if(hodnota!=NULL && phodnota==NULL)
@@ -401,7 +401,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 
-                Tape->active->result->value.valFull=TRUE;
+                Tape->active->result->value.valFull=DATA;
 	   		}
 
 	   		else if(hodnota==NULL && phodnota!=NULL)
@@ -433,7 +433,7 @@ printf("01 \n");
 				}
 
 				else return E_INTERN;
-				Tape->active->result->value.valFull=TRUE;
+				Tape->active->result->value.valFull=DATA;
 			}
 
 	   		else
@@ -465,7 +465,7 @@ printf("01 \n");
 				}
 
 				else return E_INTERN;
-				Tape->active->result->value.valFull=TRUE;
+				Tape->active->result->value.valFull=DATA;
 			}
 		}
 
@@ -580,7 +580,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************MUL*********************************************************/
@@ -694,7 +694,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************DIV*********************************************************/
@@ -808,7 +808,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************BIGGER******************************************************/
@@ -965,7 +965,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 
@@ -1134,7 +1134,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 /*********************************************ESMALLER****************************************************/
 		else if(Tape->active->instruction==EQL)
@@ -1298,7 +1298,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 /*********************************************NEQUAL******************************************************/
 			else if(Tape->active->instruction==NEQ)
@@ -1454,7 +1454,7 @@ printf("01 \n");
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 
