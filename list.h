@@ -11,7 +11,7 @@ typedef struct ParamItem tParamItem;
 typedef struct TapeItem tTapeItem;
 
 typedef enum {                  // typ operandu na pasku
-    O_NOTDATA,                  // 0 zadny operand                   
+    O_NOTDATA,                  // 0 zadny operand
     O_INT,                      // 1 integer
     O_REAL,                     // 2 real
     O_BOOL,                     // 3 boolean
@@ -26,7 +26,7 @@ typedef enum {                  // instrukce na pasku
     ADD,                        // 0 +
     MUL,                        // 1 *
     SUB,                        // 2 -
-    DIV,                        // 3 / 
+    DIV,                        // 3 /
     EQ,                         // 4 =
     NEQ,                        // 5 <>
     LESS,                       // 6 <
@@ -35,8 +35,8 @@ typedef enum {                  // instrukce na pasku
     EQM,                        // 9 >=
     ASSIGN,                     // 10 :=
     FUNC,                       // 11 if,while
-    CALL,                       // 12 volani funkce 
-    NOP,                        // 13 prazdna instrukce
+    CALL,                       // 12 volani funkce
+    NOP,                         // 13 prazdna instrukce
     JUMPN,                      // 14 instrukce pro skok podmienka
     JUMP,
     NOPJ
@@ -46,6 +46,7 @@ typedef union {                 // hodnota daneho tokenu po konvertovani
     int ival;                   // promenna pro integer
     double rval;                // promenna pro real
     bool bval;                  // promenna pro boolean
+    bool valFull;               // ma hodnotu ?
     string sval;                // promenna pro string
     tTapeItem *tape_pointer;    // typ ukazatel pro vysledky na pasce
     tParamItem *param_pointer;  // typ ukazatel pro vysledky parametru funkce
@@ -127,8 +128,8 @@ void initFunList();                                                          // 
 tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params, int forward, int paramcount); // vlozeni funkce do tabulky funkci
 tErrors insertFunListItemEmbed(char *name);                                  // pouziva se pro vlozeni vestavenych funkci do seznamu funkci
 tFunListItem *searchFunList(string *name);                                  // vyhleda danou funkci v tabulce a vraci ukazatel na ni
-tFunListItem *searchFunListN(string *name); 
-tFunListItem *searchFunListFW(string *name);   
+tFunListItem *searchFunListN(string *name);
+tFunListItem *searchFunListFW(string *name);
 void initParamlist(tParamList *paramlist);                                    // incializace seznamu parametru
 tErrors insertParam(tParamList *paramlist, string *name, tOperand type);   // vlozeni parametru do seznamu
 tParamItem *searchParam(tParamList *paramlist, string *name);                 // hledani parametru v seznamu
@@ -145,6 +146,6 @@ void freePointer(void *pointer);                  // uvolni pamet na kterou ukaz
 void freeAlloc();                                 // uvolni veskerou pamet, ktera byla alokovana pomoci funkce allocate/reallocate
 
 void IniTape();                                   // inicializuje pasku
-tErrors InsertEmptyItemTape();                    // vlozi prazny prvek na konec pasky 
+tErrors InsertEmptyItemTape();                    // vlozi prazny prvek na konec pasky
 void WriteTape();
 #endif
