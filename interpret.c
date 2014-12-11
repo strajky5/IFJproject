@@ -539,8 +539,8 @@ tErrors interpret()											// interpret
 
 				if(hodnota->type == O_INT && phodnota->type == O_INT)
 					{
-						Tape->active->result->type=O_INT;
-						Tape->active->result->value.ival=hodnota->value.ival/phodnota->value.ival;
+						Tape->active->result->type=O_REAL;
+						Tape->active->result->value.rval=hodnota->value.ival/phodnota->value.ival;
 					}
 				else if(hodnota->type == O_INT && phodnota->type == O_REAL){
 					Tape->active->result->value.rval=hodnota->value.ival/phodnota->value.rval;
@@ -566,8 +566,8 @@ tErrors interpret()											// interpret
 
 				if(hodnota->type == O_INT && Tape->active->op2->type == O_INT)
 					{
-						Tape->active->result->type=O_INT;
-						Tape->active->result->value.ival=hodnota->value.ival/Tape->active->op2->value.ival;
+						Tape->active->result->type=O_REAL;
+						Tape->active->result->value.rval=hodnota->value.ival/Tape->active->op2->value.ival;
 					}
 				else if(hodnota->type == O_INT && Tape->active->op2->type == O_REAL){
 					Tape->active->result->value.rval=hodnota->value.ival/Tape->active->op2->value.rval;
@@ -594,8 +594,8 @@ tErrors interpret()											// interpret
 
 				if(Tape->active->op1->type == O_INT && phodnota->type == O_INT)
 					{
-						Tape->active->result->type=O_INT;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival/phodnota->value.ival;
+						Tape->active->result->type=O_REAL;
+						Tape->active->result->value.rval=Tape->active->op1->value.ival/phodnota->value.ival;
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
@@ -621,8 +621,8 @@ tErrors interpret()											// interpret
 
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
-						Tape->active->result->type=O_INT;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival/Tape->active->op2->value.ival;
+						Tape->active->result->type=O_REAL;
+						Tape->active->result->value.rval=Tape->active->op1->value.ival/Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
 					Tape->active->result->value.rval=Tape->active->op1->value.ival/Tape->active->op2->value.rval;
@@ -667,16 +667,16 @@ tErrors interpret()											// interpret
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>phodnota->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval>phodnota->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>phodnota->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>phodnota->value.rval;
 				}
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -695,25 +695,25 @@ tErrors interpret()											// interpret
 				if(hodnota->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=hodnota->value.ival>Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=hodnota->value.ival>Tape->active->op2->value.ival;
 					}
 				else if(hodnota->type == O_INT && Tape->active->op2->type == O_REAL){
-					Tape->active->result->value.rval=hodnota->value.ival>Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.ival>Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval>Tape->active->op2->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -734,26 +734,26 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && phodnota->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival>phodnota->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival>phodnota->value.ival;
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival>phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival>phodnota->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>phodnota->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>phodnota->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -772,25 +772,25 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival>Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>Tape->active->op2->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -840,16 +840,16 @@ tErrors interpret()											// interpret
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>=phodnota->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval>=phodnota->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>=phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>=phodnota->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>=phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>=phodnota->value.rval;
 				}
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -868,25 +868,25 @@ tErrors interpret()											// interpret
 				if(hodnota->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=hodnota->value.ival>=Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=hodnota->value.ival>=Tape->active->op2->value.ival;
 					}
 				else if(hodnota->type == O_INT && Tape->active->op2->type == O_REAL){
-					Tape->active->result->value.rval=hodnota->value.ival>=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.ival>=Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>=Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval>=Tape->active->op2->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>=Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval>=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval>=Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -907,26 +907,26 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && phodnota->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival>=phodnota->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival>=phodnota->value.ival;
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival>=phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival>=phodnota->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>=phodnota->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>=phodnota->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>=phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>=phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>=phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>=phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -945,25 +945,25 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival>=Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival>=Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival>=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival>=Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>=Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>=Tape->active->op2->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>=Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval>=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval>=Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -1009,16 +1009,16 @@ tErrors interpret()											// interpret
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval==phodnota->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval==phodnota->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval==phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval==phodnota->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval==phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval==phodnota->value.rval;
 				}
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -1037,25 +1037,25 @@ tErrors interpret()											// interpret
 				if(hodnota->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=hodnota->value.ival==Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=hodnota->value.ival==Tape->active->op2->value.ival;
 					}
 				else if(hodnota->type == O_INT && Tape->active->op2->type == O_REAL){
-					Tape->active->result->value.rval=hodnota->value.ival==Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.ival==Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval==Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval==Tape->active->op2->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval==Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval==Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval==Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval==Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -1076,26 +1076,26 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && phodnota->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival==phodnota->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival==phodnota->value.ival;
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival==phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival==phodnota->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval==phodnota->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval==phodnota->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval==phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval==phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval==phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval==phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -1114,25 +1114,25 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival==Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival==Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival==Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival==Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval==Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval==Tape->active->op2->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval==Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval==Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval==Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval==Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -1169,16 +1169,16 @@ tErrors interpret()											// interpret
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval!=phodnota->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval!=phodnota->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval!=phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval!=phodnota->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval!=phodnota->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval!=phodnota->value.rval;
 				}
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -1197,25 +1197,25 @@ tErrors interpret()											// interpret
 				if(hodnota->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=hodnota->value.ival!=Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=hodnota->value.ival!=Tape->active->op2->value.ival;
 					}
 				else if(hodnota->type == O_INT && Tape->active->op2->type == O_REAL){
-					Tape->active->result->value.rval=hodnota->value.ival!=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.ival!=Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval!=Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=hodnota->value.rval!=Tape->active->op2->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval!=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval!=Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=hodnota->value.rval!=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=hodnota->value.rval!=Tape->active->op2->value.rval;
 				}
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
@@ -1236,26 +1236,26 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && phodnota->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival!=phodnota->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival!=phodnota->value.ival;
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival!=phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival!=phodnota->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval!=phodnota->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval!=phodnota->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval!=phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval!=phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && phodnota->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval!=phodnota->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval!=phodnota->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
@@ -1274,25 +1274,25 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						Tape->active->result->value.ival=Tape->active->op1->value.ival!=Tape->active->op2->value.ival;
+						Tape->active->result->value.bval=Tape->active->op1->value.ival!=Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
-					Tape->active->result->value.rval=Tape->active->op1->value.ival!=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.ival!=Tape->active->op2->value.rval;
 					Tape->active->result->type=O_BOOL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval!=Tape->active->op2->value.ival;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval!=Tape->active->op2->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval!=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval!=Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_BOOL && Tape->active->op2->type == O_BOOL){
 					Tape->active->result->type=O_BOOL;
-					Tape->active->result->value.rval=Tape->active->op1->value.rval!=Tape->active->op2->value.rval;
+					Tape->active->result->value.bval=Tape->active->op1->value.rval!=Tape->active->op2->value.rval;
 				}
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
