@@ -278,7 +278,7 @@ int commands()
 //				else{
 //                  Tape->last->op1 = item;
 //				}
-			  }
+}
 //			  else{
 //                Tape->last->op1 = par;
 //			  }
@@ -306,7 +306,7 @@ int commands()
 				Tape->last->op1 = glob;
 			}
 			Tape->last->op2 = Tape->last->previous->result;
-			printf("v parseri %d \n",Tape->last->previous->result);
+			printf("v parseri %d \n",Tape->last->op2);
 			if ((strCmpConstStr (&(T.s), "end"))) {
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				semi = 1;
@@ -690,11 +690,11 @@ void constructOpStringLine2(string *dest, tVariable *operand) {
         }
         break;
     case O_INT:
-        sprintf(str, "%d", operand->value.ival);
+        sprintf(str, "%d", &operand->value.ival);
         strFromChar(dest, str);
         break;
     case O_REAL:
-        sprintf(str, "%.2f", operand->value.rval);
+        sprintf(str, "%d", &operand->value.rval);
         strFromChar(dest, str);
         break;
     case O_STRING:
@@ -828,6 +828,9 @@ tErrors printTape(tTape *tape) {
         if(iter->op2 != NULL) constructOpStringLine2(&op2, iter->op2);
         if(iter->result != NULL) constructOpStringLine2(&result, iter->result);
         printf("||\t%s\t|\t%s\t|\t%s\t|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
+		
+
+
 
         printf("||======================================================================||\n");
         iter = iter->next;

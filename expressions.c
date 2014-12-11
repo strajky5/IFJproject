@@ -669,7 +669,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
 		printf("kolko krat? \n");
         ExpStackPush(S, NONTERM, NULL);    //vlozim zpatky na zasobnik novy neterminal
         Tape->last->result = S->Top->tempVarPtr; // ukladam vysledek OP1 a OP2 do result na pasku	
-		printf("exp : %d \n",S->Top->tempVarPtr->type);
+		printf("exp : %d \n",S->Top->tempVarPtr);
         er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
         if (er == E_INTERN)
             return er;
