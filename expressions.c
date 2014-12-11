@@ -599,14 +599,22 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
                 if (TopOp->tempVarPtr->type != O_BOOL)
                     return E_SEMB;
 					printf("co %d \n",reduct);
-                if (reduct != 1){
-                Tape->last->result = S->Top->tempVarPtr;
-                Tape->last->op1 = NULL;
-                Tape->last->op2 = NULL;
+                if (reduct != 1)
+                { 
+                    Tape->last->op1 = S->Top->tempVarPtr;
+                    
+                    if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
+                        return E_INTERN;
+                    if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
+                        return E_INTERN;
+                    temp->value->bval = TRUE;
+                    temp->type->O_BOOL;
+                    Tape->instruction = MORE;
+                    Tape->last->op2 = temp;
 				
-				er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
-                if (er == E_INTERN)
-			    return er;
+				    er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+                    if (er == E_INTERN)
+			            return er;
 				}
 				ExpStackPop(S);
                 return E_OK;
