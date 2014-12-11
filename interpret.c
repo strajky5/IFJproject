@@ -20,7 +20,7 @@ tErrors interpret()											// interpret
 	{
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
-																// dokud nebudu na konci pasky pracuj
+		Controlvalue();
 /*********************************************ASSIG*******************************************************/
 		if(Tape->active->instruction==ASSIGN)
 		{
@@ -1499,14 +1499,16 @@ void StackDeleteDataDelete(TStack *stack)                                       
 
 tParamItem *SearchStackName(string*Search)
 {
-	while(stack.top->op1!=NULL)
+	TStackItem *topp=stack.top;
+	while(topp->op1!=NULL)
 	{
-		if (strCmpstring(Search,&stack.top->op1->name)==0)
+		if (strCmpstring(Search,&topp->op1->name)==0)
 		{
-			return stack.top->op1;
+			return topp->op1;
 		}
-		stack.top->op1=stack.top->op1->next;
+		topp->op1=topp->op1->next;
 	}
+
 	return NULL;
 }
 
@@ -1529,4 +1531,8 @@ string Readstring()
     while(scanf("%c",&a)==EOF)
     strAddChar(&vracim, a);
     return vracim;
+}
+void Controlvalue()
+{
+
 }
