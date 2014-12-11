@@ -1,44 +1,16 @@
-//#include "interpret.h"
+
 #include "expressions.h"
 #include "parser.h"
 #include "scaner.h"
-#include "ial.h"
 #include <math.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "str.h"
 #include "stdbool.h"
-#include "errors.h"
-#include "list.h"
 #include "interpret.h"
 
 extern tTape *Tape;
 
-
-  //Globálna premenná  pre zásobník
-typedef struct Stack TStack;
-typedef struct StackItem TStackItem;
-struct StackItem{   			// struktura pro prvek zasobnika
-								// obsahuje:
-tParamItem *op1;					// ukazatel na operand
-TStack * pdown;					// ukazatel na prvek pod nim
-
-};
-
-struct Stack{   				// struktura zasobnika
-
-TStackItem * top;				// ukazatel na vrchol zasobniku
-
-};
-TStack stack;
-void stackinit(TStack *stack);								//funkce na inicializaci zasobniku
-tErrors stackPush(TStack *stack,tParamItem *op);			// pro pushnuti na zasobnik
-tParamItem* TStackTopPop(TStack *stack);					// pro vziti ze zasobniku
-void StackDeleteDataDelete(TStack *stack);					// pro uvolneni zasobniku z pameti
-int partition( int a[], int l, int r);						// pomovna funkce pro quicksort
-tParamItem *SearchStackName(string*Search);
-string *conc(string*s1,string*s2);
 
 tErrors interpret()											// interpret
 {
@@ -46,11 +18,10 @@ tErrors interpret()											// interpret
     tTapeItem *savepositionJump=NULL;
     tParamItem *hodnota,*phodnota;
 
-
 	stackinit(&stack);
-
 																			// inicializace pole
-	while(Tape->active!=Tape->last){
+	while(Tape->active!=Tape->last)
+	{
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
 																// dokud nebudu na konci pasky pracuj
@@ -58,14 +29,14 @@ tErrors interpret()											// interpret
 
 		if(Tape->active->op1->type==FUNCTION)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
-
 			stackPush(&stack,Tape->active->op1);												// pushnu si na zasobnik parametry funkce
 			////////////////////////////definovane///////////////////////						// nini jdu do funci ktere jsou vestavene
 			if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
 				{
 					while(stack.top->op1=NULL)													// cykli dokud nejsi za poslednim parametrem
 					{
-						switch (stack.top->op1->type) {											// budem rozdelovat podle typu
+						switch (stack.top->op1->type) 
+						{											// budem rozdelovat podle typu
 							case O_INT: printf("%d",stack.top->op1->value.ival);break;			// jde o int tak tiskni int
 							case O_REAL: printf("%f",stack.top->op1->value.rval);break;		// jde o real tak tiskni real
 							case O_BOOL: if(stack.top->op1->value.bval==TRUE)					// jde o bool tiskni bool
@@ -74,11 +45,10 @@ tErrors interpret()											// interpret
 										break;
 							case O_STRING: printf("%s",stack.top->op1->value.sval);break;		// jde o string tisku string
 							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
-							}
+						}
 
 						stack.top->op1=stack.top->op1->next;									// posunuse na dalsi parametr funkce
 					}
-
 				}
 			else if(strCmpstring(&Tape->active->op1->name, "length"))							// pokud jde o length tak
 			{
@@ -134,7 +104,8 @@ tErrors interpret()											// interpret
 			}
 			else if(strCmpstring(&Tape->active->op1->name, "readln"))							// pokud je readln
 			{
-				switch (stack.top->op1->type) {													// kontroluji podle typu
+				switch (stack.top->op1->type) 
+				{													// kontroluji podle typu
 					case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
 								Tape->active->op1->type=O_INT;									// nastavim typ na int
 								break;
@@ -161,17 +132,17 @@ tErrors interpret()											// interpret
 		{
 		    savepositionJump=Tape->active;
 		    Tape->active->op1->value.tape_pointer=savepositionJump;
-			if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL){	// kdyz je predchozi vysledek false tak skacu
-			savepositionJump=Tape->active->op1->value.tape_pointer;
-			Tape->active=Tape->active->result->value.tape_pointer;								// a skacu tam kam ukazuje pointer
-			continue;																			// a na zacatek cyklu
+			if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
+			{	
+				savepositionJump=Tape->active->op1->value.tape_pointer;
+				Tape->active=Tape->active->result->value.tape_pointer;								// a skacu tam kam ukazuje pointer
+				continue;																			// a na zacatek cyklu
 			}
 			else return E_INTERN;																				// pokud neni false tak nic nedelej
 
 		}
 		else if (Tape->active->instruction==NOP)
 		{
-
 			Tape->active=savepositionCall->next;
 			TStackTopPop(&stack);
 
