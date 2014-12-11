@@ -296,7 +296,7 @@ int commands()
 			gettoken();
 			if ((error = testToken(T_ASSIGN)) != E_OK) return error;
 			if ((error = ExpParser()) != E_OK) return error;
-			if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+			//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 			Tape->last->instruction = ASSIGN;
 
 			if (loc != NULL){

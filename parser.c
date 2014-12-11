@@ -42,6 +42,7 @@ int testToken(tTypes type) { // test tokenu
 }
 
 int parser() {
+	printf("sega");
 	initAlloc(); 
 	BSTInit(&TempTree);
 	Tape = allocate(sizeof(tTape));
@@ -53,9 +54,11 @@ int parser() {
     if(insertFunListItemEmbed("copy") != E_OK) return E_INTERN;
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
+	printf("sega");
 	//free(TempVar);
 	printf("eror je %d \n",error);
 	error = printTape(Tape);
+//	BSTDispose(&TempTreeL);
 	BSTDispose(&TempTree);
 	printf("eror je %d \n",error);
 //	printf("eror je %d \n",error);
@@ -102,7 +105,6 @@ int program() {
 		   //printf("za funkcwma \n");
 		   afun = 0;    //ADDED
 		   //strFree(&ActFun); //ADDED
-		   BSTDispose(&TempTreeL);
 		   if ((error = program()) != E_OK) return error;
 		   return E_OK;
 		}
@@ -247,20 +249,17 @@ int blockList() {
 
 int commands() 
 {
-	tVariable *glob;
-	tVariable *loc;
-	tParamList *par;
+	tVariable *glob = NULL;
+	tVariable *loc = NULL;
+	tParamList *par = NULL;
 	string *name = allocate(sizeof(string));
     tTapeItem *previous = Tape->last;
     tVariable *op1 = allocate(sizeof(tVariable));
     tVariable *op2 = allocate(sizeof(tVariable));
     tVariable *result = allocate(sizeof(tVariable));
     if((name == NULL) || (op1 == NULL) || (op2 == NULL) || (result == NULL)) return E_INTERN;
-
 	switch(T.type){
 		case T_ID:
-			if(InsertEmptyItemTape() != E_OK) return E_INTERN;
-			Tape->last->instruction = ASSIGN;
 			if(afun == 1){                                 //ADDED pokud neni ve funkci kontroluje jen global
 			  if ((par = searchParam(paramlist, &(T.s))) == NULL){            //added
 			    if(strCmpstring(&(T.s), &ActFun) != 0){ //zde budu muset nejspis dat jen jmenu aktualni fkce
@@ -268,36 +267,45 @@ int commands()
 			        if((glob = BSTSearch (TempTree, T.s)) == NULL){
 						return E_SEMA;
 					}
-					else{
-                      Tape->last->op1 = glob;
-					}    
+//					else{
+//                      Tape->last->op1 = glob;
+//					}    
 			      }
-				  else{
-                    Tape->last->op1 = loc;
-				  }
+//				  else{
+//                    Tape->last->op1 = loc;
+//				  }
 			    }
-				else{
-                  Tape->last->op1 = item;
-				}
+//				else{
+//                  Tape->last->op1 = item;
+//				}
 			  }
-			  else{
-                Tape->last->op1 = par;
-			  }
+//			  else{
+//                Tape->last->op1 = par;
+//			  }
 			}
 			else {
 				if((glob = BSTSearch (TempTree, T.s)) == NULL){
 					return E_SEMA;
 				}
-				else{
-				  Tape->last->op1 = glob;
-				}
+//				else{
+//				  Tape->last->op1 = glob;
+//				}
 			}
 
-			Tape->last->op2 = Tape->last->previous->result;
 
 			gettoken();
 			if ((error = testToken(T_ASSIGN)) != E_OK) return error;
 			if ((error = ExpParser()) != E_OK) return error;
+			//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+			Tape->last->instruction = ASSIGN;
+
+			if (loc != NULL){
+				Tape->last->op1 = loc;
+			}
+			else if (glob != NULL){
+				Tape->last->op1 = glob;
+			}
+			Tape->last->op2 = Tape->last->previous->result;
 			if ((strCmpConstStr (&(T.s), "end"))) {
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				semi = 1;
