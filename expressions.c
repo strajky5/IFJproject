@@ -176,7 +176,7 @@ tErrors SearchFun()
         
         temp->type = FUNCTION;          // ulozeni do instrukce resultu ze je to funkce
         temp->name = FunPtr->name;
-        temp->value.tape_pointer = FunPtr->tape_ptr;   // vlozeni do value ukazatele, kde je funkce na pasce 
+        //temp->value.tape_pointer = FunPtr->tape_ptr;   // vlozeni do value ukazatele, kde je funkce na pasce 
         temp->value.param_pointer = parameterList->first;
 
         Tape->last->op1 = temp;        // ulozeni ukazatele na tVariable polozku, ktera obsahuje ukazatel na funkci na pasce 
