@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include <math.h>
 #include "expressions.h"
 #include "parser.h"
 #include "scaner.h"
@@ -35,7 +34,7 @@ tErrors interpret()											// interpret
 			////////////////////////////definovane///////////////////////						// nini jdu do funci ktere jsou vestavene
 			if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
 				{
-					while(stack.top->op1=NULL)													// cykli dokud nejsi za poslednim parametrem
+					while(stack.top->op1==NULL)													// cykli dokud nejsi za poslednim parametrem
 					{
 						switch (stack.top->op1->type)
 						{											// budem rozdelovat podle typu
@@ -74,7 +73,7 @@ tErrors interpret()											// interpret
 				pocet=stack.top->op1->value.ival;												// pocet charu na zkopirovani
 
 				ukaz= pomocny.str+pozice-1;														// nahraji si string ktery hledam do pole(predam si ukazatel)
-				ukaz[pocet]='/0';																// na jeho konec nahraji /0
+				ukaz[pocet]='\0';																// na jeho konec nahraji /0
 				pomocny.str=ukaz;																// nini nahraji ukazatel do stringu
 				pomocny.length=pocet;															// dom do jeho parametru delku
 				pomocny.allocSize=sizeof(char)*pocet;											// a jakou velikost pameti potrebuje
@@ -85,7 +84,7 @@ tErrors interpret()											// interpret
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "find"))								// pokud je funkce find
 			{
-				int position=0;
+			/*	int position=0;
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
 				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error
 
@@ -95,7 +94,7 @@ tErrors interpret()											// interpret
 				//position = findBM(pattern_str,strGetLength(&stack.top->op1->value.sval), find_str, strGetLength(&stack.top->op1->next->value.sval.str));
 
 				Tape->active->op1->value.ival = position;
-
+*/
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "sort"))								// pokud je sort
 			{
@@ -106,16 +105,19 @@ tErrors interpret()											// interpret
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "readln"))							// pokud je readln
 			{
+			    float a;
 				switch (stack.top->op1->type)
 				{													// kontroluji podle typu
 					case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
 								Tape->active->op1->type=O_INT;									// nastavim typ na int
 								break;
-					case O_REAL:scanf("%f",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
+					case O_REAL:scanf("%f",&a);						// pokud jde o real tak ho naskenuji do op2
+								Tape->active->op1->value.rval=a;
 								Tape->active->op1->type=O_REAL;									// nasatavim typ
 								break;
-					case O_STRING:scanf("%s",&Tape->active->op1->value.sval);					// pokud string...
-								Tape->active->op1->type=O_STRING;
+					case O_STRING:
+                                Tape->active->op1->value.sval=Readstring();
+                                Tape->active->op1->type=O_STRING;
 								break;
 					default : return E_RUNX;
 				}
@@ -679,7 +681,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&hodnota->value.sval,&phodnota->value.sval) > 0)
+					if(strCopystring(&hodnota->value.sval,&phodnota->value.sval) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -716,7 +718,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) > 0)
+					if(strCopystring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -756,7 +758,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) > 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -793,7 +795,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) > 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -806,7 +808,8 @@ tErrors interpret()											// interpret
 /*********************************************SMALLER*****************************************************/
 		else if(Tape->active->instruction==LESS)													/// op1<op2
 		{
-				tValue*prohozeni=Tape->active->op1;
+				tVariable*prohozeni;
+				prohozeni=Tape->active->op1;
 				Tape->active->op1=Tape->active->op2;
 				Tape->active->op2=prohozeni;
 				Tape->active->instruction=MORE;
@@ -851,7 +854,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(phodnota->value.sval)) >= 0)
+					if(strCopystring(&(hodnota->value.sval),&(phodnota->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -888,7 +891,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) >= 0)
+					if(strCopystring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -928,7 +931,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) >= 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -965,7 +968,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) >= 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -976,7 +979,7 @@ tErrors interpret()											// interpret
 /*********************************************ESMALLER****************************************************/
 		else if(Tape->active->instruction==EQL)
 		{
-				tValue*prohozeni=Tape->active->op1;
+				tVariable*prohozeni=Tape->active->op1;
 				Tape->active->op1=Tape->active->op2;
 				Tape->active->op2=prohozeni;
 				Tape->active->instruction=EQM;
@@ -1020,7 +1023,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(phodnota->value.sval)) == 0)
+					if(strCopystring(&(hodnota->value.sval),&(phodnota->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1057,7 +1060,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) == 0)
+					if(strCopystring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1097,7 +1100,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) == 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1134,7 +1137,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) == 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1180,7 +1183,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(phodnota->value.sval)) != 0)
+					if(strCopystring(&(hodnota->value.sval),&(phodnota->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1217,7 +1220,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) != 0)
+					if(strCopystring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1257,7 +1260,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) != 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1294,7 +1297,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) != 0)
+					if(strCopystring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1502,7 +1505,7 @@ tParamItem* TStackTopPop(TStack *stack)                                         
 void StackDeleteDataDelete(TStack *stack)                                       // fuknce pro uvolneni zasobnika
 {
     if (stack->top==NULL) return;                                                       // pokud je prazdny nic nedelej
-    while(TStackTopPop(&stack)!=NULL)                                                   // dokud zasobnik neni prazdny tak pop
+    while(TStackTopPop(stack)!=NULL)                                                   // dokud zasobnik neni prazdny tak pop
         ;
     return;
 }
@@ -1512,11 +1515,11 @@ tParamItem *SearchStackName(string*Search)
 {
 	while(stack.top->op1!=NULL)
 	{
-		if (strCmpConstStr(Search,&stack.top->op1->name)==0)
+		if (strCmpstring(Search,&stack.top->op1->name)==0)
 		{
-			return &stack.top->op1;
+			return stack.top->op1;
 		}
-		stack.top=stack.top->op1->next;
+		stack.top->op1=stack.top->op1->next;
 	}
 	return NULL;
 }
@@ -1532,4 +1535,12 @@ string *conc(string*s1,string*s2)
         i++;
     }
     return s1;
+}
+string Readstring()
+{
+    char a;
+    string vracim;
+    while(scanf("%c",&a)==EOF)
+    strAddChar(&vracim, a);
+    return vracim;
 }
