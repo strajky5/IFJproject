@@ -13,25 +13,26 @@ tErrors interpret()											// interpret
     tTapeItem *savepositionCall=NULL;
     tTapeItem *savepositionJump=NULL;
     tParamItem *hodnota,*phodnota;
-
 	stackinit(&stack);
-																			// inicializace pole
-	while(Tape->active!=Tape->last)
+	Tape->active = Tape->first;																		// inicializace pole
+	while(Tape->active != Tape->last)
 	{
+	printf("00 %d\n",Tape->active->instruction);
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
 /*********************************************ASSIG*******************************************************/
 		if(Tape->active->instruction==ASSIGN)
 		{
+printf("01 \n");
 
-
-			if(Tape->active->op2->value.valFull==FALSE|| phodnota->value.valFull==FALSE )
+	/*		if(Tape->active->op2->value.valFull==FALSE|| phodnota->value.valFull==FALSE )
 			{
                 return E_RUNX;
-			}
-
+			}*/
+printf("01 \n");
 			if(hodnota!=NULL && phodnota!=NULL)
 			{
+			printf("01 \n");
 				if(hodnota->type==O_INT && phodnota->type==O_INT)
 				{
 					hodnota->value.ival=phodnota->value.ival;
@@ -62,6 +63,7 @@ tErrors interpret()											// interpret
 			}
 			else if(hodnota==NULL && phodnota!=NULL)
 			{
+			printf("01 \n");
 				if(Tape->active->op1->type==O_INT && phodnota->type==O_INT)
 				{
 					Tape->active->op1->value.ival=phodnota->value.ival;
@@ -93,6 +95,7 @@ tErrors interpret()											// interpret
 			}
 			else if(hodnota!=NULL && phodnota==NULL)
 			{
+			printf("01 \n");
 				if(hodnota->type==O_INT && Tape->active->op2->type==O_INT)
 				{
 					hodnota->value.ival=Tape->active->op2->value.ival;
@@ -124,9 +127,11 @@ tErrors interpret()											// interpret
 			}
 			else if(hodnota==NULL && phodnota==NULL)
 			{
+			printf("01 \n");
 				if(Tape->active->op1->type==O_INT && Tape->active->op2->type==O_INT)
 				{
 					Tape->active->op1->value.ival=Tape->active->op2->value.ival;
+					printf(" ass je %d \n",Tape->active->op1->value.ival);
 
 				}
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_INT)
@@ -156,7 +161,7 @@ tErrors interpret()											// interpret
 
 		}
 		////////////////////////funkce//////////////////////
-		else if(Tape->active->op1->type==FUNCTION)													// pokud je je typ funkce tak jdi do vetve pro funkce
+	/*	else if(Tape->active->op1->type==FUNCTION)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 
 		    tParamItem pomocna;
@@ -247,7 +252,7 @@ tErrors interpret()											// interpret
 
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "find"))								// pokud je funkce find
-			{
+			{*/
 			/*	int position=0;
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
 				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error
@@ -259,13 +264,13 @@ tErrors interpret()											// interpret
 
 				Tape->active->op1->value.ival = position;
 */
-			}
+		/*	}
 			else if(strCmpConstStr(&Tape->active->op1->name, "sort"))								// pokud je sort
-			{
+			{*/
 			/*	if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
 				quickSort(stack.top->op1->value.sval.str, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
-			*/	Tape->active->op1->type=O_STRING;												// a nastavim typ na string
-                Tape->active->op1->value.valFull=TRUE;
+			*/	/*Tape->active->op1->type=O_STRING;		*/										// a nastavim typ na string
+   /*             Tape->active->op1->value.valFull=TRUE;
 			}
 			else if(strCmpConstStr(&Tape->active->op1->name, "readln"))							// pokud je readln
 			{
@@ -294,35 +299,48 @@ tErrors interpret()											// interpret
 			    Tape->active=Tape->active->result->value.tape_pointer->next;					// tak ze posunu se do ukazovaneho mista
 				continue;																		// vratim se na zacatek cyklu
 			}
-		}
+		}*/
 
 		else if (Tape->active->instruction==JUMP)											// pokud jde o if neho while tak kontroluji na jump
 		{
-		    savepositionJump=Tape->active;
-		    Tape->active->op1->value.tape_pointer=savepositionJump;
-			if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
+		printf("02 \n ");
+		    //savepositionJump=Tape->active;
+		    //Tape->active->op2->value.tape_pointer=savepositionJump;
+			/*if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
 			{
 				savepositionJump=Tape->active->op1->value.tape_pointer;
-				Tape->active=Tape->active->result->value.tape_pointer;								// a skacu tam kam ukazuje pointer
+				Tape->active=Tape->active->result->value.tape_pointer;				// a skacu tam kam ukazuje pointer
+				printf("02 \n ");
 				continue;																			// a na zacatek cyklu
 			}
-			else return E_INTERN;																				// pokud neni false tak nic nedelej
+			else return E_INTERN;*/																				// pokud neni false tak nic nedelej
+		//	if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
+		//	{
+				
+				Tape->active=Tape->active->op2->value.tape_pointer;				// a skacu tam kam ukazuje pointer
+				printf("02 \n ");
+				continue;																			// a na zacatek cyklu
+		//	}
+		//	else return E_INTERN;
 
 		}
-		else if (Tape->active->instruction==NOP)
+	/*	else if (Tape->active->instruction==NOP)
 		{
 			Tape->active=savepositionCall->next;
 			TStackTopPop(&stack);
 
-		}
-		else if (Tape->active->instruction==NOPJ)
+		}*/
+		
+		else if (Tape->active->instruction==NOP)
 		{
-			Tape->active=savepositionJump->previous;
+		
+		printf("nop");
+			Tape->active=Tape->active->next;
+			continue;
 		}
 		/*********************************************ADD*********************************************************/
 	   else if(Tape->active->instruction==ADD)
 	   {
-
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 	   			if(hodnota->type == O_STRING && phodnota->type == O_STRING)
@@ -429,6 +447,7 @@ tErrors interpret()											// interpret
 					{
 						Tape->active->result->type=O_INT;
 						Tape->active->result->value.ival=Tape->active->op1->value.ival+Tape->active->op2->value.ival;
+						printf("vysledok je : %d \n",Tape->active->result->value.ival);
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
 					Tape->active->result->value.rval=Tape->active->op1->value.ival+Tape->active->op2->value.rval;
@@ -915,6 +934,7 @@ tErrors interpret()											// interpret
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
+						printf("toto je %d \n",Tape->active->op2->value.ival);
 						Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
@@ -1498,6 +1518,7 @@ void StackDeleteDataDelete(TStack *stack)                                       
 
 tParamItem *SearchStackName(string*Search)
 {
+ if (stack.top == NULL) return NULL;
 	TStackItem *topp=stack.top;
 	while(topp->op1!=NULL)
 	{

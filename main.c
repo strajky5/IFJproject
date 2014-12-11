@@ -6,8 +6,9 @@
 #include "scaner.h"
 #include "parser.h"
 #include "errors.h"
-//#include "ial.h"
-
+#include "ial.h"
+#include "list.h"
+#include "interpret.h"
 tErrors error;
 FILE *f;
 tToken T;
@@ -36,9 +37,13 @@ int main(int argc, char *argv[])
 		error = parser();
 	
 
-	/*if(error==E_OK){
-	 error=interpret(funTable.first);
-	 }*/
+	if(error==E_OK){
+	 error= interpret();
+	 }
+	 if(error!=E_OK)
+		error = E_RUNX;
+	 freeAlloc(); 
+	 BSTDispose(&TempTree);
 	 if((fclose(f))!= 0)
         error=E_INTERN;
     switch(error){

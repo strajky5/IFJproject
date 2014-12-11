@@ -18,12 +18,13 @@ list.o: list.c list.h str.h errors.h
 
 expressions.o: expressions.c expressions.h str.h errors.h scaner.h list.h ial.h
 	$(CC) $(CFLAGS) -c expressions.c -o expressions.o
-
-main.o: main.c errors.h scaner.h parser.h 
+interpret.o: interpret.c interpret.h str.h errors.h scaner.h list.h ial.h scaner.h expressions.h
+	$(CC) $(CFLAGS) -c interpret.c -o interpret.o
+main.o: main.c errors.h scaner.h parser.h ial.h list.h
 	$(CC) $(CFLAGS) -c main.c -o main.o
 
-main: str.o scaner.o expressions.o list.o parser.o ial.o main.o  
-	$(CC) $(CFLAGS) str.o scaner.o parser.o ial.o list.o expressions.o main.o -o main
+main: str.o scaner.o expressions.o list.o parser.o ial.o interpret.o main.o  
+	$(CC) $(CFLAGS) str.o scaner.o parser.o ial.o list.o expressions.o interpret.o main.o -o main
 
 clean:
 	rm -f *.o $(OBJFILES) 
