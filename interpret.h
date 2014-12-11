@@ -5,9 +5,9 @@
 
 typedef struct Stack TStack;
 typedef struct StackItem TStackItem;
-TStack stack;  //Globálna premenná  pre zásobník
 
-struct TStack{   				// struktura zasobnika
+
+struct Stack{   				// struktura zasobnika
 	TStackItem *top;				// ukazatel na vrchol zasobniku
 };
 

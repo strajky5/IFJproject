@@ -9,7 +9,7 @@
 #include "interpret.h"
 
 extern tTape *Tape;
-
+TStack stack;           //Globálna premenná  pre zásobník
 
 tErrors interpret()											// interpret
 {
@@ -28,13 +28,18 @@ tErrors interpret()											// interpret
 
 		if(Tape->active->op1->type==FUNCTION)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
-			stackPush(&stack,Tape->active->op1);												// pushnu si na zasobnik parametry funkce
+
+		    tParamItem pomocna;
+		    pomocna.type=Tape->active->op1->type;
+		    pomocna.value=Tape->active->op1->value;
+		    pomocna.name=Tape->active->op1->name;
+			stackPush(&stack,&pomocna);												// pushnu si na zasobnik parametry funkce
 			////////////////////////////definovane///////////////////////						// nini jdu do funci ktere jsou vestavene
 			if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
 				{
 					while(stack.top->op1=NULL)													// cykli dokud nejsi za poslednim parametrem
 					{
-						switch (stack.top->op1->type) 
+						switch (stack.top->op1->type)
 						{											// budem rozdelovat podle typu
 							case O_INT: printf("%d",stack.top->op1->value.ival);break;			// jde o int tak tiskni int
 							case O_REAL: printf("%f",stack.top->op1->value.rval);break;		// jde o real tak tiskni real
@@ -84,26 +89,26 @@ tErrors interpret()											// interpret
 			{
 				int position=0;
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
-				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error																		
-				
-				char* pattern_str = stack.top->op1->value.sval.str;								
-				char* find_str = stack.top->op1->next->value.sval.str;							
-				
+				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error
+
+				char* pattern_str = stack.top->op1->value.sval.str;
+				char* find_str = stack.top->op1->next->value.sval.str;
+
 				//position = findBM(pattern_str,strGetLength(&stack.top->op1->value.sval), find_str, strGetLength(&stack.top->op1->next->value.sval.str));
 
-				Tape->active->op1->value->ival = position;
-				
+				Tape->active->op1->value.ival = position;
+
 			}
 			else if(strCmpstring(&Tape->active->op1->name, "sort"))								// pokud je sort
 			{
-				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
+			/*	if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
 				quickSort(stack.top->op1->value.sval.str, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
-				Tape->active->op1->type=O_STRING;												// a nastavim typ na string
+			*/	Tape->active->op1->type=O_STRING;												// a nastavim typ na string
 
 			}
 			else if(strCmpstring(&Tape->active->op1->name, "readln"))							// pokud je readln
 			{
-				switch (stack.top->op1->type) 
+				switch (stack.top->op1->type)
 				{													// kontroluji podle typu
 					case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
 								Tape->active->op1->type=O_INT;									// nastavim typ na int
@@ -132,7 +137,7 @@ tErrors interpret()											// interpret
 		    savepositionJump=Tape->active;
 		    Tape->active->op1->value.tape_pointer=savepositionJump;
 			if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
-			{	
+			{
 				savepositionJump=Tape->active->op1->value.tape_pointer;
 				Tape->active=Tape->active->result->value.tape_pointer;								// a skacu tam kam ukazuje pointer
 				continue;																			// a na zacatek cyklu
