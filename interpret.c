@@ -44,7 +44,7 @@ tErrors interpret()											// interpret
 											printf("TRUE");
 										else printf("FALSE");
 										break;
-							case O_STRING: printf("%s",stack.top->op1->value.sval);break;		// jde o string tisku string
+							case O_STRING: printf("%s",stack.top->op1->value.sval.str);break;		// jde o string tisku string
 							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
 						}
 
