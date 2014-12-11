@@ -20,7 +20,6 @@ tErrors interpret()											// interpret
 	{
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
-		Controlvalue();
 /*********************************************ASSIG*******************************************************/
 		if(Tape->active->instruction==ASSIGN)
 		{
@@ -1531,8 +1530,4 @@ string Readstring()
     while(scanf("%c",&a)==EOF)
     strAddChar(&vracim, a);
     return vracim;
-}
-void Controlvalue()
-{
-
 }
