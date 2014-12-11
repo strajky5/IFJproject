@@ -596,7 +596,9 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
             else
             {
 			printf("co %d \n",reduct);
-               // printf("OP2: %d INST:%d \n",TopOp->tempVarPtr->type,TopIstruction->data);
+               if (flag == FALSE)
+			   {
+			   // printf("OP2: %d INST:%d \n",TopOp->tempVarPtr->type,TopIstruction->data);
                 if (TopOp->tempVarPtr->type != O_BOOL)
                     return E_SEMB;
 					printf("co %d \n",reduct);
@@ -612,13 +614,28 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
                     temp->type = O_BOOL;
                     Tape->last->instruction = MORE;
                     Tape->last->op2 = temp;
-				}
+				
 				    er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
                     if (er == E_INTERN)
 			            return er;
-				
+				}
 				ExpStackPop(S);
                 return E_OK;
+				}
+				else
+				{
+				if (reduct != 1)
+                { 
+				 Tape->last->op1 = S->Top->tempVarPtr;
+				 res = S->Top->tempVarPtr->type;
+				     er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+                    if (er == E_INTERN)
+			            return er;
+				}
+				ExpStackPop(S);
+                return E_OK;
+				}
+				
             }
         }
 
@@ -821,6 +838,16 @@ int ExpParser()
                 }
                 res = O_BOOL;
             }
+			else
+			{
+			  er = ExpStackReduct(&S, sign);
+                if (er)                         //pokud redukce neprobehla v poradku
+                {
+                    ExpStackDispose(&S);        //rusim cely zasobnik
+                    return er;                  //koncim s chybou
+                }
+	
+			}
         } 
         
         
