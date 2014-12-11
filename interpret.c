@@ -5,7 +5,6 @@
 #include "expressions.h"
 #include "parser.h"
 #include "scaner.h"
-#include "stdbool.h"
 #include "interpret.h"
 
 extern tTape *Tape;
@@ -54,14 +53,14 @@ tErrors interpret()											// interpret
 						stack.top->op1=stack.top->op1->next;									// posunuse na dalsi parametr funkce
 					}
 				}
-			else if(strCmpstring(&Tape->active->op1->name, "length"))							// pokud jde o length tak
+			else if(strCmpConstStr(&Tape->active->op1->name, "length"))							// pokud jde o length tak
 			{
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ string vrat chybu
 				Tape->active->op1->value.ival=strGetLength(&stack.top->op1->value.sval);			// do operandu dva nahrani vysledek
 				Tape->active->op1->type=O_INT;													// a typ
 
 			}
-			else if(strCmpstring(&Tape->active->op1->name, "copy")) //// nevim jstly funguje		// pokud je copy
+			else if(strCmpConstStr(&Tape->active->op1->name, "copy")) //// nevim jstly funguje		// pokud je copy
 			{
 				int pozice=0;																	// vytvorim si pomocne promene pro prehlednost
 				int pocet=0;
@@ -85,7 +84,7 @@ tErrors interpret()											// interpret
 
 
 			}
-			else if(strCmpstring(&Tape->active->op1->name, "find"))								// pokud je funkce find
+			else if(strCmpConstStr(&Tape->active->op1->name, "find"))								// pokud je funkce find
 			{
 				int position=0;
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
@@ -99,14 +98,14 @@ tErrors interpret()											// interpret
 				Tape->active->op1->value.ival = position;
 
 			}
-			else if(strCmpstring(&Tape->active->op1->name, "sort"))								// pokud je sort
+			else if(strCmpConstStr(&Tape->active->op1->name, "sort"))								// pokud je sort
 			{
 			/*	if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
 				quickSort(stack.top->op1->value.sval.str, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
 			*/	Tape->active->op1->type=O_STRING;												// a nastavim typ na string
 
 			}
-			else if(strCmpstring(&Tape->active->op1->name, "readln"))							// pokud je readln
+			else if(strCmpConstStr(&Tape->active->op1->name, "readln"))							// pokud je readln
 			{
 				switch (stack.top->op1->type)
 				{													// kontroluji podle typu
@@ -681,7 +680,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&hodnota->value.sval,&phodnota->value.sval) > 0)
+					if(strCmpConstStr(&hodnota->value.sval,&phodnota->value.sval) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -718,7 +717,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) > 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -758,7 +757,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) > 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -795,7 +794,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) > 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) > 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -853,7 +852,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(phodnota->value.sval)) >= 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(phodnota->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -890,7 +889,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) >= 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -930,7 +929,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) >= 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -967,7 +966,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) >= 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) >= 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1022,7 +1021,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(phodnota->value.sval)) == 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(phodnota->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1059,7 +1058,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) == 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1099,7 +1098,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) == 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1136,7 +1135,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) == 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) == 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1182,7 +1181,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(phodnota->value.sval)) != 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(phodnota->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1219,7 +1218,7 @@ tErrors interpret()											// interpret
 				else if(hodnota->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) != 0)
+					if(strCmpConstStr(&(hodnota->value.sval),&(Tape->active->op2->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1259,7 +1258,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && phodnota->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) != 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(phodnota->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1296,7 +1295,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
 					{
 					Tape->active->result->type=O_BOOL;
-					if(strCmpstring(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) != 0)
+					if(strCmpConstStr(&(Tape->active->op1->value.sval),&(Tape->active->op2->value.sval)) != 0)
 						Tape->active->result->value.bval=1;
 					else Tape->active->result->value.bval=0;
 					}
@@ -1514,7 +1513,7 @@ tParamItem *SearchStackName(string*Search)
 {
 	while(stack.top->op1!=NULL)
 	{
-		if (strCmpstring(Search,&stack.top->op1->name)==0)
+		if (strCmpConstStr(Search,&stack.top->op1->name)==0)
 		{
 			return &stack.top->op1;
 		}

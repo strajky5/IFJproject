@@ -36,8 +36,10 @@ typedef enum {                  // instrukce na pasku
     ASSIGN,                     // 10 :=
     FUNC,                       // 11 if,while
     CALL,                       // 12 volani funkce 
-    NOP,                         // 13 prazdna instrukce
-    JUMPN                        // 14 instrukce pro skok podmienka
+    NOP,                        // 13 prazdna instrukce
+    JUMPN,                      // 14 instrukce pro skok podmienka
+    JUMP,
+    NOPJ
 } tInstruction;
 
 typedef union {                 // hodnota daneho tokenu po konvertovani
