@@ -9,7 +9,7 @@
 
 tOperand res;
 bool flag; 
-int reduct;
+int reduct = 0;
 //######################### Konvertovani Tokenu ##########################
 //budeme identifikovat co tam je .. jestli ID nebo realcni op., atd. a prepiseme ve strukture T.type aktualni typ tokenu
 tErrors ConvertToken(tExpType *type)
@@ -616,7 +616,8 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
 				{
 				    if (reduct != 1)
                     { 
-				        Tape->last->op1 = S->Top->tempVarPtr;
+                        Tape->last->instruction = NOP;
+				        Tape->last->result = S->Top->tempVarPtr;
 				        res = S->Top->tempVarPtr->type;
 				        er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
                         if (er == E_INTERN)
@@ -707,10 +708,12 @@ int ExpParser()
    		return E_SYN;                           //vrat chybu
     if (type == ASSIGNED)         //pokud zpracovavame prirazeni :=
     {    //printf("je to ASSSIGNED \n");
-        flag = TRUE;  }          //inicialuzj mi flagu na TRUE
+        flag = TRUE;  
+    }          //inicialuzj mi flagu na TRUE
     if (type == KEYWORD)        //pokud zpracovavame IF nebo WHILE
-        {    //printf("je to IF,WHILE \n");
-        flag = FALSE;      }     //inicializuj mi flagu na FALSE
+    {    //printf("je to IF,WHILE \n");
+        flag = FALSE;     
+    }     //inicializuj mi flagu na FALSE
     //##############################################################
 
     gettoken();                 //volam funkci pro dalsi token
@@ -765,7 +768,7 @@ int ExpParser()
             }
         }
         else                        // pokud token neni ID, pointer inicializuj na NULL
-        {
+        {   
             pointerTemp = NULL;      
         }
 
@@ -843,6 +846,6 @@ int ExpParser()
     //################################################################## 
 
     ExpStackDispose(&S);			//zrus cely zasobnik
-
+    reduct = 0;
     return E_OK;					//vrat vse OK (syntaxe i semnatika v poradku)
 	}

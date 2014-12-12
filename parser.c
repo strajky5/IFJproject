@@ -56,6 +56,10 @@ int parser() {
 	error = program();
 	printf("sega");
 	//free(TempVar);
+	error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+    if (error == E_INTERN)
+        return error;
+    Tape->last->instruction = NOP;
 	printf("eror je %d \n",error);
 	error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
@@ -826,7 +830,7 @@ tErrors printTape(tTape *tape) {
         if(iter->op1 != NULL) constructOpStringLine2(&op1, iter->op1);
         if(iter->op2 != NULL) constructOpStringLine2(&op2, iter->op2);
         if(iter->result != NULL) constructOpStringLine2(&result, iter->result);
-        printf("||\t%s\t|\t%s|\t%s|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
+        printf("||\t%s\t|\t%s\t|\t%s\t|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
 		
 
 
