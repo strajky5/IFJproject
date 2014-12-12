@@ -58,10 +58,6 @@ int parser() {
 	 if (error != E_OK)
         return error;
 	//free(TempVar);
-	error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
-    if (error == E_INTERN)
-        return error;
-    Tape->last->instruction = NOP;
 
 	error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
@@ -96,6 +92,10 @@ int program() {
                	if ((error = testToken(T_DOT)) != E_OK) return error;
 		          gettoken();
 		        if ((error = testToken(T_EOF)) != E_OK) return error;
+					error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+					if (error == E_INTERN)
+						return error;
+					Tape->last->instruction = NOP;
 				return E_OK;
 			}
 	        if ((error  = blockList()) != E_OK) return error;
@@ -303,13 +303,14 @@ int commands()
 			if ((error = ExpParser()) != E_OK) return error;
 			//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 			Tape->last->instruction = ASSIGN;
-
+	       
 			if (loc != NULL){
 				Tape->last->op1 = loc;
 			}
 			else if (glob != NULL){
 				Tape->last->op1 = glob;
 			}
+			 if (res != Tape->last->op1->type ) return E_SEMB;
 			Tape->last->op2 = Tape->last->previous->result;
 			Tape->last->result = Tape->last->op1;
 			printf("parser adresa resultu v parseri %d \n",Tape->last->op2);
@@ -492,6 +493,12 @@ int commands()
 			}
 	        if (!strCmpConstStr (&(T.s), "write")) { //write(ID) !!! integer or real !!!
 				gettoken();
+				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+                Tape->last->instruction = JUMP;
+                Tape->last->op1 = op1;
+                Tape->last->op1->type = O_BOOL;
+                Tape->last->op1->value.bval = false;
+				
 				if((error = testToken(T_LB)) != E_OK) return error;
 				gettoken();
 				if((error = writefun()) != E_OK) return error;
