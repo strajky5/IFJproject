@@ -17,6 +17,7 @@ tErrors interpret()											// interpret
 	Tape->active = Tape->first;																		// inicializace pole
 	while(Tape->active != Tape->last)
 	{
+	printf("jsem v while-----------------------------------\n");
 	printf("00 %d\n",Tape->active->instruction);
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
@@ -38,7 +39,7 @@ tErrors interpret()											// interpret
 			}
 
 			*/
-printf("01 \n");
+printf("prirazeni := \n");
 			if(hodnota!=NULL && phodnota!=NULL)
 			{
 			printf("01 \n");
@@ -148,11 +149,11 @@ printf("01 \n");
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_INT)
 				{
 					Tape->active->op1->value.rval=Tape->active->op2->value.ival;
-//printf(" %d \n",Tape->active->op1->value.ival);
+
 				}
 				else if(Tape->active->op1->type==O_INT && Tape->active->op2->type==O_REAL)
 				{
-					Tape->active->op1=Tape->active->op2;
+					Tape->active->op1->value.rval=Tape->active->op2->value.rval;
 					//printf(" %d \n",Tape->active->op1->value.ival);
 					Tape->active->op1->type=O_REAL;
 				}
@@ -171,10 +172,10 @@ printf("01 \n");
 			}
 
 		}
-		////////////////////////funkce//////////////////////
-		/*else if(Tape->active->op1->type==FUNCTION && Tape->active->op1->value.param_pointer)													// pokud je je typ funkce tak jdi do vetve pro funkce
+		printf("jsem pred funkci\n");
+		if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
-
+			printf("jsem v funkci\n");
 		    tParamItem pomocna;
 		    pomocna.type=Tape->active->op1->type;
 		    pomocna.value=Tape->active->op1->value;
@@ -212,7 +213,7 @@ printf("01 \n");
                 }
             }
 
-			if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
+			/*if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
 				{
 					while(stack.top->op1==NULL)													// cykli dokud nejsi za poslednim parametrem
 					{
@@ -303,18 +304,17 @@ printf("01 \n");
 				}
                 Tape->active->op1->value.valFull=TRUE;
 			}
-			else if(Tape->active->instruction==CALL)											// kdyz je to funkce vlastni tak je tam call
+          */if(Tape->active->instruction==CALL)											// kdyz je to funkce vlastni tak je tam call
 			{
-			    Tape->active->op1->value.tape_pointer=savepositionCall;
-			    savepositionCall=Tape->active;
-			    Tape->active=Tape->active->result->value.tape_pointer->next;					// tak ze posunu se do ukazovaneho mista
-				continue;																		// vratim se na zacatek cyklu
+			    Tape->active=Tape->active->op2->value.tape_pointer;
+			    continue;
+                                                        																		// vratim se na zacatek cyklu
 			}
-		}*/
+		}
 
-		else if (Tape->active->instruction==JUMP)											// pokud jde o if neho while tak kontroluji na jump
+		if (Tape->active->instruction==JUMPN)											// pokud jde o if neho while tak kontroluji na jump
 		{
-		printf("02 \n ");
+		printf("jumpN\n ");
 		    //savepositionJump=Tape->active;
 		    //Tape->active->op2->value.tape_pointer=savepositionJump;
 			/*if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
@@ -325,13 +325,19 @@ printf("01 \n");
 				continue;																			// a na zacatek cyklu
 			}
 			else return E_INTERN;*/																				// pokud neni false tak nic nedelej
-		//	if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
-		//	{
+			if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
+			{
 
 				Tape->active=Tape->active->op2->value.tape_pointer;				// a skacu tam kam ukazuje pointer
-				printf("02 \n ");
+				printf("po skoku \n ");
 				continue;																			// a na zacatek cyklu
-		//	}
+			}
+		else if (Tape->active->instruction==JUMP)
+		{
+			printf("jump\n ");
+			Tape->active=Tape->active->op2->value.tape_pointer;
+			continue;
+		}
 		//	else return E_INTERN;
 
 		}
@@ -352,6 +358,7 @@ printf("01 \n");
 		/*********************************************ADD*********************************************************/
 	   else if(Tape->active->instruction==ADD)
 	   {
+	   		printf("jsem v ADD\n");
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 	   			if(hodnota->type == O_STRING && phodnota->type == O_STRING)
@@ -485,7 +492,7 @@ printf("01 \n");
 /*********************************************SUB*********************************************************/
 		 else if(Tape->active->instruction==SUB)
 	   {
-
+	   		printf("jsem v subb\n");
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
@@ -599,7 +606,7 @@ printf("01 \n");
 /*********************************************MUL*********************************************************/
 		 else if(Tape->active->instruction==MUL)
 	   {
-
+	   		printf("jsem v mul\n");
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
@@ -713,7 +720,7 @@ printf("01 \n");
 /*********************************************DIV*********************************************************/
 		else if(Tape->active->instruction==DIV)
 	   {
-
+	   		printf("jsem v div\n");
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
@@ -827,6 +834,7 @@ printf("01 \n");
 /*********************************************BIGGER******************************************************/
 		else if(Tape->active->instruction==MORE)		//op1>op2
 		{
+			printf("jsem v bigger\n");
             if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
@@ -910,6 +918,7 @@ printf("01 \n");
 					{
 						Tape->active->result->type=O_BOOL;
 						Tape->active->result->value.bval=Tape->active->op1->value.ival>phodnota->value.ival;
+
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
@@ -943,11 +952,11 @@ printf("01 \n");
 
 	   		else
 	   		{
-
+	   			printf("jsem v bigger\n");
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						//printf("toto je %d \n",Tape->active->op2->value.ival);
+						printf("jsem v bigger a vracim %d\n",Tape->active->op1->value.ival>Tape->active->op2->value.rval);
 						Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
@@ -985,6 +994,7 @@ printf("01 \n");
 /*********************************************SMALLER*****************************************************/
 		else if(Tape->active->instruction==LESS)													/// op1<op2
 		{
+				printf("jsem v less\n");
 				tVariable*prohozeni;
 				prohozeni=Tape->active->op1;
 				Tape->active->op1=Tape->active->op2;
@@ -996,7 +1006,7 @@ printf("01 \n");
 /*********************************************EBIGGER*****************************************************/
 		else if(Tape->active->instruction==EQM)						// op1>=op2
 		{
-
+			printf("jsem v lessEq\n");
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
@@ -1151,7 +1161,7 @@ printf("01 \n");
 		}
 /*********************************************ESMALLER****************************************************/
 		else if(Tape->active->instruction==EQL)
-		{
+		{		printf("jsem v <=\n");
 				tVariable*prohozeni=Tape->active->op1;
 				Tape->active->op1=Tape->active->op2;
 				Tape->active->op2=prohozeni;
@@ -1160,7 +1170,7 @@ printf("01 \n");
 		}
 /*********************************************EQUAL*******************************************************/
 		else if(Tape->active->instruction==EQL)
-		{
+		{	printf("jsem v ==\n");
             if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
@@ -1315,7 +1325,7 @@ printf("01 \n");
 		}
 /*********************************************NEQUAL******************************************************/
 			else if(Tape->active->instruction==NEQ)
-		{
+		{	printf("jsem v !=\n");
 
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
@@ -1470,7 +1480,7 @@ printf("01 \n");
 			//Tape->active->result->value.valFull=DATA;
 		}
 
-
+		printf("posunuti pasky\n");
 		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
 	}
 
