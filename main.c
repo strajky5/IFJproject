@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
 	if(error==E_OK){
 	 error= interpret();
 	 }
-	/* if(error!=E_OK)
-		error = E_RUNX;*/
+	 if(error!=E_OK)
+		error = E_RUNX;
 	 freeAlloc(); 
 	 BSTDispose(&TempTree);
 	 if((fclose(f))!= 0)
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
             fprintf(stderr,"Semanticka chyba: Chyba typovej kombatibility\n");
             break;
         case E_RUNX:
-            fprintf(stderr,"Behova chyba\n");
+            fprintf(stderr,"Semanticka chyba\n");
             break;
         case E_INTERN:
             fprintf(stderr,"Interna chyba\n");
