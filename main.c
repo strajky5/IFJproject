@@ -40,8 +40,6 @@ int main(int argc, char *argv[])
 	if(error==E_OK){
 	 error= interpret();
 	 }
-	 if(error!=E_OK)
-		error = E_RUNX;
 	 freeAlloc(); 
 	 BSTDispose(&TempTree);
 	 if((fclose(f))!= 0)
