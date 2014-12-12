@@ -23,8 +23,7 @@ typedef enum {                  // typ operandu na pasku
 } tOperand;
 
 typedef enum {                  // typ operandu na pasku
-    NODATA,                     // 0 nema hodnotu 
-    DATA                        // 1 ma hodnotu
+    NODATA                     // 0 nema hodnotu 
 } tBool;
 
 typedef enum {                  // instrukce na pasku
@@ -41,7 +40,7 @@ typedef enum {                  // instrukce na pasku
     ASSIGN,                     // 10 :=
     FUNC,                       // 11 if,while
     CALL,                       // 12 volani funkce
-    NOP,                         // 13 prazdna instrukce
+    NOP,                        // 13 prazdna instrukce
     JUMPN,                      // 14 instrukce pro skok podmienka
     JUMP,
     NOPJ
@@ -52,7 +51,6 @@ typedef union {                 // hodnota daneho tokenu po konvertovani
     double rval;                // promenna pro real
     bool bval;                  // promenna pro boolean
     tBool valFull;              // ma/nema hodnutu
-    //bool valFull;
     string sval;                // promenna pro string
     tTapeItem *tape_pointer;    // typ ukazatel pro vysledky na pasce
     tParamItem *param_pointer;  // typ ukazatel pro vysledky parametru funkce
@@ -102,7 +100,6 @@ typedef struct FunListItem {    // prvek tabulky pro funkce
 	int forward;
     tOperand ret_type;          // navratovy typ funkce
     tParamList *param_list;     // ukazatel na seznam parametru
-    tTape *tape_ptr;            // ukazatel na pasku, kde je funkce
     struct FunListItem *next;  // ukazatel na dalsi prvek seznamu
 } tFunListItem;
 

@@ -162,25 +162,16 @@ tErrors SearchFun()
         if (param_number != param_counter)
             return E_SEMB;
 
-        if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
-            return E_INTERN;
-        if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
-            return E_INTERN; 
-        
-        if ((fun_pointer = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
-            return E_INTERN;
-        if (strInit(&(fun_pointer->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
-            return E_INTERN; 
+       0.211102.1111110211
 
         res = FunPtr->ret_type;
         
         temp->type = FUNCTION;          // ulozeni do instrukce resultu ze je to funkce
         temp->name = FunPtr->name;
-        //temp->value.tape_pointer = FunPtr->tape_ptr;   // vlozeni do value ukazatele, kde je funkce na pasce 
         temp->value.param_pointer = parameterList->first;
 
         Tape->last->op1 = temp;        // ulozeni ukazatele na tVariable polozku, ktera obsahuje ukazatel na funkci na pasce 
-        Tape->last->instruction = FUNCTION;   // instrukce je funkce
+        Tape->last->instruction = CALL;   // instrukce je funkce
         Tape->last->op2 = NULL;
         Tape->last->result = NULL; 
 
@@ -433,7 +424,6 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     return E_INTERN;
                 temp->tempVarPtr->type = O_INT;									//operand typu O_INT
                 temp->tempVarPtr->value.ival = strtol(T.s.str,NULL, 10); 
-                //temp->tempVarPtr->value.valFull = DATA;
                 break;
 
             case T_REAL :			// push na stack token typu REAL, alokace  mistro pro ulozeni jmena, typu a hodnoty tokenu
@@ -443,7 +433,6 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     return E_INTERN;
                 temp->tempVarPtr->type = O_REAL;								//operand typu O_REAL
                 temp->tempVarPtr->value.rval = strtod(T.s.str, NULL);	
-                //temp->tempVarPtr->value.valFull = DATA;
                 break;
         																			
             case T_STRING :			// push na stack token typu STRING, alokace  mistro pro ulozeni jmena, typu a hodnoty tokenu
@@ -456,7 +445,6 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     return E_INTERN;
                 if (strCopystring(&(temp->tempVarPtr->value.sval), &(T.s)) == STR_ERROR)
                     return E_INTERN;
-                //temp->tempVarPtr->value.valFull = DATA;
                 break;
 
             case T_KONST :			// push na stack token typu KONST - BOOL, alokace  mistro pro ulozeni jmena, typu a hodnoty tokenu											//konstanty ukladam jako true nebo false
@@ -471,7 +459,6 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
                     temp->tempVarPtr->value.bval = false;                     //uloz hodnotu operandu jako false
                 else
                     return E_SYN;                                             //vraci error E_SYN
-                //temp->tempVarPtr->value.valFull = DATA;
                 break;
            default : break;
         }
@@ -481,7 +468,7 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
     if(T.type == T_ID)              // pokud typ tokenu je ID (nejaka promenna) 
     {
         temp->tempVarPtr = item;    // uloz mi ukazatel na promennou do stromu LBVS/GBVS
-        //temp->tempVarPtr->value.valFull = NODATA;
+        temp->tempVarPtr->value.valFull = NODATA;
     }
     L->Top = temp;					// ulozeni prvku do ukazatele na vrchol zasobniku
 
@@ -586,10 +573,9 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
             ExpStackTopPoint (S, &TopOp);                       // druhy operand OP2 (prvni prvek na STACKU)
 			ExpStackInstructionTopPoint (S, &TopIstruction);    // instrukce (druhy prvek na STACKU)
             if (TopIstruction->data != DOLAR)
-            {    //printf("tady nemam co delat \n");
-			//printf(" delat \n");
+            {    
                 ExpStackSecTopPoint (S, &SecTopOp);                 // prvni operand OP1 (treti prvek na STACKU)
-           reduct =1;
+                reduct =1;
                 //printf("OP2: %d OP1:%d \n",TopOp->tempVarPtr->type,SecTopOp->tempVarPtr->type);
                 er = ExpParserSem(&(TopOp->tempVarPtr->type),&(SecTopOp->tempVarPtr->type),&(TopIstruction->instruction)); // aplikuju semanticka pravidla
                 if (er == E_SEMB)       //pokud je semantika vyrazu nespravana
@@ -602,57 +588,53 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
             }
             else
             {
-			//printf("co %d \n",reduct);
                if (flag == FALSE)
 			   {
 			   // printf("OP2: %d INST:%d \n",TopOp->tempVarPtr->type,TopIstruction->data);
-                if (TopOp->tempVarPtr->type != O_BOOL)
-                    return E_SEMB;
-				//	printf("co %d \n",reduct);
-                if (reduct != 1)
-                { 
-                    Tape->last->op1 = S->Top->tempVarPtr;
+                    if (TopOp->tempVarPtr->type != O_BOOL)
+                        return E_SEMB;
+                    if (reduct != 1)
+                    { 
+                        Tape->last->op1 = S->Top->tempVarPtr;
                     
-                    if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
-                        return E_INTERN;
-                    if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
-                        return E_INTERN;
-                    temp->value.bval = TRUE;
-                    temp->type = O_BOOL;
-                    Tape->last->instruction = MORE;
-                    Tape->last->op2 = temp;
+                        if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
+                            return E_INTERN;
+                        if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
+                            return E_INTERN;
+                        temp->value.bval = TRUE;
+                        temp->type = O_BOOL;
+                        Tape->last->instruction = MORE;
+                        Tape->last->op2 = temp;
 				
-				    er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
-                    if (er == E_INTERN)
-			            return er;
-				}
-				ExpStackPop(S);
-                return E_OK;
-				}
+				        er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+                        if (er == E_INTERN)
+			                return er;
+				    }
+				    
+                    ExpStackPop(S);
+                    return E_OK;
+			    }
 				else
 				{
-				if (reduct != 1)
-                { 
-				 Tape->last->op1 = S->Top->tempVarPtr;
-				 res = S->Top->tempVarPtr->type;
-				     er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
-                    if (er == E_INTERN)
-			            return er;
-				}
-				ExpStackPop(S);
-                return E_OK;
-				}
-				
+				    if (reduct != 1)
+                    { 
+				        Tape->last->op1 = S->Top->tempVarPtr;
+				        res = S->Top->tempVarPtr->type;
+				        er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+                        if (er == E_INTERN)
+			             return er;
+				    }
+				    ExpStackPop(S);
+                    return E_OK;
+				}	
             }
         }
-
 
         ExpStackTop(S, &toptype);	 //vraci hodnotu prvniho prvku
         if (toptype == NONTERM)      //kdyz je na vrcholu zasobnika neterminal
              return E_SYN;           //vraci error E_SYN
         else 						 //pokud tam neni neterminal
         {
-		//printf("tady  \n");
             Tape->last->instruction = S->Top->instruction; 
             ExpStackPop (S);		 //odstranim dany operand
         }
@@ -662,11 +644,9 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
              return E_SYN;           //vraci error E_SYN
         else
         {
-		//printf(" nemam  \n");
             Tape->last->op1 = S->Top->tempVarPtr; 
             ExpStackPop (S);		 //odstranim dany operand
         }
-		//printf("kolko krat? \n");
         ExpStackPush(S, NONTERM, NULL);    //vlozim zpatky na zasobnik novy neterminal
         Tape->last->result = S->Top->tempVarPtr; // ukladam vysledek OP1 a OP2 do result na pasku	
 		printf("exp adreasa resultu v expe : %d \n",S->Top->tempVarPtr);
