@@ -85,11 +85,9 @@ printf("prirazeni := \n");
 					Tape->active->op1->value.rval=phodnota->value.ival;
 
 				}
-				else if(Tape->active->op1->type==O_INT && phodnota->type==O_REAL)
+				else if(Tape->active->op1->type==O_BOOL && phodnota->type==O_BOOL)
 				{
-					Tape->active->op1->value.rval=phodnota->value.rval;
-
-					Tape->active->op1->type=O_REAL;
+					Tape->active->op1->value.bval=phodnota->value.bval;
 				}
 				else if(Tape->active->op1->type==O_REAL && phodnota->type==O_REAL)
 				{
