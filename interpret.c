@@ -172,7 +172,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 		}
 		////////////////////////funkce//////////////////////
-	/*	else if(Tape->active->op1->type==FUNCTION)													// pokud je je typ funkce tak jdi do vetve pro funkce
+		/*else if(Tape->active->op1->type==FUNCTION && Tape->active->op1->value.param_pointer)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 
 		    tParamItem pomocna;
@@ -262,8 +262,8 @@ printf(" %d \n",Tape->active->op1->value.ival);
                 Tape->active->op1->value.valFull=TRUE;
 
 			}
-			else if(strCmpConstStr(&Tape->active->op1->name, "find"))								// pokud je funkce find
-			{*/
+			//else if(strCmpConstStr(&Tape->active->op1->name, "find"))								// pokud je funkce find
+			//{*/
 			/*	int position=0;
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
 				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error
