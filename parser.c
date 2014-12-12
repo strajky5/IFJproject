@@ -54,9 +54,6 @@ int parser() {
     if(insertFunListItemEmbed("copy") != E_OK) return E_INTERN;
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
-	printf("sega");
-	if(InsertEmptyItemTape() != E_OK) return E_INTERN;
-	Tape->last->instruction = NOP;
 	//free(TempVar);
 	error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
     if (error == E_INTERN)
