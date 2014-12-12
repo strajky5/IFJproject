@@ -260,37 +260,36 @@ int commands()
     if((name == NULL) || (op1 == NULL) || (op2 == NULL) || (result == NULL)) return E_INTERN;
 	switch(T.type){
 		case T_ID:
-			if(afun == 1){                                 //ADDED pokud neni ve funkci kontroluje jen global
+	/*		if(afun == 1){                                 //ADDED pokud neni ve funkci kontroluje jen global
 			  if ((par = searchParam(paramlist, &(T.s))) == NULL){            //added
 			    if(strCmpstring(&(T.s), &ActFun) != 0){ //zde budu muset nejspis dat jen jmenu aktualni fkce
 			      if((loc = BSTSearch (TempTreeL, T.s)) == NULL){
 			        if((glob = BSTSearch (TempTree, T.s)) == NULL){
 						return E_SEMA;
-					}
+					}*/
 //					else{
 //                      Tape->last->op1 = glob;
 //					}    
-			      }
+//			      }
 //				  else{
 //                    Tape->last->op1 = loc;
 //				  }
-			    }
+//			    }
 //				else{
 //                  Tape->last->op1 = item;
 //				}
-}
+//}
 //			  else{
 //                Tape->last->op1 = par;
 //			  }
-			}
-			else {
+//			}
+/*			else {*/
 				if((glob = BSTSearch (TempTree, T.s)) == NULL){
 					return E_SEMA;
 				}
-//				else{
-//				  Tape->last->op1 = glob;
-//				}
-			}
+			/*else{
+				  Tape->last->op1 = glob;				}*/
+			//}
 
 
 			gettoken();

@@ -51,8 +51,8 @@ typedef union {                 // hodnota daneho tokenu po konvertovani
     int ival;                   // promenna pro integer
     double rval;                // promenna pro real
     bool bval;                  // promenna pro boolean
-    //tBool valFull;              // ma/nema hodnutu
-    bool valFull;
+    tBool valFull;              // ma/nema hodnutu
+    //bool valFull;
     string sval;                // promenna pro string
     tTapeItem *tape_pointer;    // typ ukazatel pro vysledky na pasce
     tParamItem *param_pointer;  // typ ukazatel pro vysledky parametru funkce
