@@ -54,7 +54,7 @@ printf("prirazeni := \n");
 					hodnota->value.rval=phodnota->value.ival;
 
 				}
-				else if(hodnota->type==O_INT && phodnota->type==O_REAL)
+				else if(hodnota->type==O_BOOL && phodnota->type==O_REAL)
 				{
 					hodnota->value.rval=phodnota->value.rval;
 
@@ -115,9 +115,9 @@ printf("prirazeni := \n");
 					hodnota->value.rval=Tape->active->op2->value.ival;
 
 				}
-				else if(hodnota->type==O_INT && Tape->active->op2->type==O_REAL)
+				else if(hodnota->type==O_BOOL && Tape->active->op2->type==O_BOOL)
 				{
-					hodnota->value.rval=Tape->active->op2->value.rval;
+					hodnota->value.bval=Tape->active->op2->value.bval;
 
 					hodnota->type=O_REAL;
 				}
@@ -149,11 +149,10 @@ printf("prirazeni := \n");
 					Tape->active->op1->value.rval=Tape->active->op2->value.ival;
 
 				}
-				else if(Tape->active->op1->type==O_INT && Tape->active->op2->type==O_REAL)
+				else if(Tape->active->op1->type==O_BOOL && Tape->active->op2->type==O_BOOL)
 				{
-					Tape->active->op1->value.rval=Tape->active->op2->value.rval;
-					//printf(" %d \n",Tape->active->op1->value.ival);
-					Tape->active->op1->type=O_REAL;
+					Tape->active->op1->value.bval=Tape->active->op2->value.bval;
+					
 				}
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_REAL)
 				{
