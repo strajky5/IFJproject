@@ -5,7 +5,7 @@
 #include "scaner.h"
 #include "interpret.h"
 
-extern tTape *Tape;
+tTape *Tape;
 TStack stack;           //Globálna premenná  pre zásobník
 
 tErrors interpret()											// interpret
@@ -24,9 +24,9 @@ tErrors interpret()											// interpret
 /*********************************************ASSIG*******************************************************/
 		if(Tape->active->instruction==ASSIGN)
 		{
-printf("01 \n");
-			printf(" ass je %d \n",Tape->active->op1->value.ival);
-					printf(" ass je %d \n",Tape->active->previous->result->value.ival);
+//printf("01 \n");
+	//		printf(" ass je %d \n",Tape->active->op1->value.ival);
+					//printf(" ass je %d \n",Tape->active->previous->result->value.ival);
 
 	/*		if(Tape->active->op2->value.valFull==NODATA)
 			{
@@ -148,12 +148,12 @@ printf("01 \n");
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_INT)
 				{
 					Tape->active->op1->value.rval=Tape->active->op2->value.ival;
-printf(" %d \n",Tape->active->op1->value.ival);
+//printf(" %d \n",Tape->active->op1->value.ival);
 				}
 				else if(Tape->active->op1->type==O_INT && Tape->active->op2->type==O_REAL)
 				{
 					Tape->active->op1=Tape->active->op2;
-					printf(" %d \n",Tape->active->op1->value.ival);
+					//printf(" %d \n",Tape->active->op1->value.ival);
 					Tape->active->op1->type=O_REAL;
 				}
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_REAL)
@@ -380,7 +380,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				}
 
 				else return E_INTERN;
-                Tape->active->result->value.valFull=DATA;
+                //Tape->active->result->value.valFull=DATA;
 
 	   		}
 	   		else if(hodnota!=NULL && phodnota==NULL)
@@ -412,7 +412,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 
-                Tape->active->result->value.valFull=DATA;
+                //Tape->active->result->value.valFull=DATA;
 	   		}
 
 	   		else if(hodnota==NULL && phodnota!=NULL)
@@ -444,7 +444,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				}
 
 				else return E_INTERN;
-				Tape->active->result->value.valFull=DATA;
+				//Tape->active->result->value.valFull=DATA;
 			}
 
 	   		else
@@ -468,17 +468,17 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_INT){
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=Tape->active->op1->value.rval+Tape->active->op2->value.ival;
-					printf("vysledok je : %d \n",Tape->active->result->value.rval);
+					//printf("vysledok je : %d \n",Tape->active->result->value.rval);
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_REAL){
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=Tape->active->op1->value.rval+Tape->active->op2->value.rval;
-						printf("vysledok je : %d \n",Tape->active->result->value.rval);
+						//printf("vysledok je : %d \n",Tape->active->result->value.rval);
 				}
 
 				else return E_INTERN;
-				Tape->active->result->value.valFull=DATA;
+				////Tape->active->result->value.valFull=DATA;
 			}
 		}
 
@@ -593,7 +593,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************MUL*********************************************************/
@@ -707,7 +707,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************DIV*********************************************************/
@@ -821,7 +821,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************BIGGER******************************************************/
@@ -947,7 +947,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						printf("toto je %d \n",Tape->active->op2->value.ival);
+						//printf("toto je %d \n",Tape->active->op2->value.ival);
 						Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
@@ -978,7 +978,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 
 
@@ -1147,7 +1147,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 /*********************************************ESMALLER****************************************************/
 		else if(Tape->active->instruction==EQL)
@@ -1311,7 +1311,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 /*********************************************NEQUAL******************************************************/
 			else if(Tape->active->instruction==NEQ)
@@ -1467,7 +1467,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=DATA;
+			//Tape->active->result->value.valFull=DATA;
 		}
 
 
