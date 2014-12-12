@@ -1,0 +1,11 @@
+var a:boolean;
+begin 
+
+	if a then
+	begin
+	end
+	else
+	begin
+	end
+	
+end.	

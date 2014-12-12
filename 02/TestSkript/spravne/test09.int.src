@@ -1,0 +1,51 @@
+var
+  a : boolean;
+  b : integer;
+  c : real;
+  d : string;
+  
+  function testa() : integer; forward;
+   
+  function test() : integer;
+  var
+    a : boolean;
+    b : integer;
+    c : real;
+    d : string;
+  begin
+    write('soooohardtest', a, 'evenharder', b)
+  end;
+  
+    function testa() : integer;
+  var
+    a : boolean;
+    b : integer;
+    c : real;
+    d : string;
+  begin
+    write('soooohardtest', a, 'evenharder', b)
+  end;
+  
+    function testb() : integer;
+  var
+    a : boolean;
+    b : integer;
+    c : real;
+    d : string;
+  begin
+    write('soooohardtest', a, 'evenharder', b)
+  end;
+  
+    function testc() : integer;
+  var
+    a : boolean;
+    b : integer;
+    c : real;
+    d : string;
+  begin
+    write('soooohardtest', a, 'evenharder', b)
+  end;
+
+begin
+  write('soooohardtest', a, 'evenharder', b)
+end.

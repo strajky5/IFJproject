@@ -1,0 +1,13 @@
+var a:integer;
+    b:real;
+    
+begin 
+
+	if b<((a+b)*b) then
+	begin
+	end
+	else
+	begin
+	end
+	
+end.	

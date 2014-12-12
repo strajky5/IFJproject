@@ -1,0 +1,25 @@
+--------------------------------------------------------------------------------------
+                   README k testovacímu systému IFJ09 - Basic tests
+--------------------------------------------------------------------------------------
+Pou¾ití:    Pro pou¾ití systému rozbalte obsah Test.zip celý do jedné slo¾ky,
+            v souboru test.sh na øádku 5 zmìòte cestu tak, aby ukazovala na vá¹
+            interpret jazyk IFJ09 a spus»te ze slo¾ky, kde je v¹e rozbaleno pomocí
+            shellu skript test.sh.
+--------------------------------------------------------------------------------------
+Roz¹íøení:  Pokud chcete roz¹íøit systém o vlastní testy, není nic jednodu¹¹ího :)
+            Pokud nechcete mìnit struktùru skriptu test.sh, staèí ve slo¾ce BlackBox
+            pøidat trojici-ètveøici souborù X[Y.].in X[Y.].out X[Y.].src X[Y.].info,
+            kde ètvrtý je vhodný pøedev¹ím pøi ¹íøení testu. X je název testu a je
+            ¾ádoucí, aby byl unikátní, proto¾e se hodí vìdìt, pøi kterém ¾e testu ona
+            chyba vznikla. Y je zkratka chybového stavu, který má interpretace kódu
+            daného testu vyvolat (pokud ¾ádný, nepøidává se). Soubor .in je vstup,
+            .out je výstup a .src je zdrojový kód. Pokud se chystáte s roz¹íøením
+            testù modifikovat skript test.sh, je pro vás celkem zbyteèné èíst tento
+            text, zøejmì na v¹e lehce pøijdete sami.
+--------------------------------------------------------------------------------------
+Doporuèení: Pokud vytvoøíte zajímavý test, který zatím v systému chybí, nebo najdete
+            chybu, podìlte se prosím. Dnes pomù¾ete vy a zítra nìkdo vám :) Neberte
+            výsledky tìchto testù za smìrodatné, testy mohou být chybné, nejednoznaèné
+            a nìkdy dokonce i "jiné"...pouze MOHOU pomoci odhalit chyby v programu.
+--------------------------------------------------------------------------------------
+

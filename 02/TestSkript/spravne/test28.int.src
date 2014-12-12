@@ -1,0 +1,9 @@
+var a:string;
+    b:string;
+begin 
+
+	while a>b do
+	 begin
+	 end
+	
+end.	

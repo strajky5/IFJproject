@@ -1,0 +1,68 @@
+var
+  a : integer;
+  b : integer;
+  function test() : integer;
+  var
+    a : integer;
+    b : integer;
+  begin
+  begin
+  end;
+  begin
+    while a < b do
+    begin
+      if a < b then
+        begin
+          a := b;
+          if a < b then
+          begin
+            a : b
+          end
+          else
+          begin
+            a := b;
+            a := a + (a + b)
+          end
+        end
+        else
+        begin
+          a := b;
+          a := a + (a + b)
+        end
+    end;
+    begin
+      readln(a)
+    end
+  end
+  end;
+
+begin
+  begin
+  end;
+  begin
+    while a < b do
+    begin
+      if a < b then
+        begin
+          a := b;
+          if a < b then
+          begin
+            a := b
+          end
+          else
+          begin
+            a := b;
+            a := a + (a + b)
+          end
+        end
+        else
+        begin
+          a := b;
+          a := a + (a + b)
+        end
+    end;
+    begin
+      readln(a)
+    end
+  end
+end.
