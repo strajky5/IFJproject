@@ -186,7 +186,7 @@ int function() {
 		if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 		item = searchFunListN(&name);
 		Tape->last->instruction = FUNC;
-		item->tape_ptr = Tape->last;
+		//item->tape_ptr = Tape->last;
 
 		if (!strCmpConstStr (&(T.s), "var")) {
 			gettoken();
@@ -826,7 +826,7 @@ tErrors printTape(tTape *tape) {
         if(iter->op1 != NULL) constructOpStringLine2(&op1, iter->op1);
         if(iter->op2 != NULL) constructOpStringLine2(&op2, iter->op2);
         if(iter->result != NULL) constructOpStringLine2(&result, iter->result);
-        printf("||\t%s\t|\t%s\t|\t%s\t|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
+        printf("||\t%s\t|\t%s|\t%s|\t%s\t\t||\n", inst.str, op1.str, op2.str, result.str);
 		
 
 

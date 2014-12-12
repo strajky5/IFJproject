@@ -162,8 +162,6 @@ tErrors SearchFun()
         if (param_number != param_counter)
             return E_SEMB;
 
-       0.211102.1111110211
-
         res = FunPtr->ret_type;
         
         temp->type = FUNCTION;          // ulozeni do instrukce resultu ze je to funkce
