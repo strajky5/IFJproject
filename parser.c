@@ -55,6 +55,8 @@ int parser() {
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
 	printf("sega");
+	if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+	Tape->last->instruction = NOP;
 	//free(TempVar);
 	error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
     if (error == E_INTERN)
@@ -309,6 +311,7 @@ int commands()
 				Tape->last->op1 = glob;
 			}
 			Tape->last->op2 = Tape->last->previous->result;
+			Tape->last->result = Tape->last->op1;
 			printf("parser adresa resultu v parseri %d \n",Tape->last->op2);
 			if ((strCmpConstStr (&(T.s), "end"))) {
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
@@ -337,7 +340,7 @@ int commands()
 				if((error = ExpParser()) != E_OK) return error; //vyraz
 				if (res != 3 ) return E_SEMB;
 				//ZAKONECNTOVANO if(InsertEmptyItemTape() != E_OK) return E_INTERN; 
-				Tape->last->instruction = JUMP;
+				Tape->last->instruction = JUMPN;
                 Tape->last->op1 = Tape->last->previous->result;
                 Tape->last->op2 = op2;
                 Tape->last->op2->type = TAPE_POINTER;
@@ -358,7 +361,7 @@ int commands()
 				if((error = blockList()) != E_OK) return error; //blocklist
 				gettoken();
 				
-				Tape->last->instruction = JUMP;
+				Tape->last->instruction = JUMPN;
                 Tape->last->op1 = op11;
                 Tape->last->op1->type = O_BOOL;
                 Tape->last->op1->value.bval = false;
@@ -435,7 +438,7 @@ int commands()
 			    }
 				
 				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
-                Tape->last->instruction = JUMPN;
+                Tape->last->instruction = JUMP;
                 Tape->last->op1 = op1;
                 Tape->last->op1->type = O_BOOL;
                 Tape->last->op1->value.bval = false;
