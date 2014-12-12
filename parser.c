@@ -54,16 +54,19 @@ int parser() {
     if(insertFunListItemEmbed("copy") != E_OK) return E_INTERN;
     if(insertFunListItemEmbed("sort") != E_OK) return E_INTERN;
 	error = program();
+		printf("eror je %d \n",error);
+	 if (error != E_OK)
+        return error;
 	//free(TempVar);
 	error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
     if (error == E_INTERN)
         return error;
     Tape->last->instruction = NOP;
-	printf("eror je %d \n",error);
+
 	error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
 //	BSTDispose(&TempTree);
-	printf("eror je %d \n",error);
+//	printf("eror je %d \n",error);
 //	printf("eror je %d \n",error);
 //freeAlloc(); 
 	return error;
