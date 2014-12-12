@@ -76,7 +76,6 @@ tErrors SearchFun()
     tErrors er;             // promenna typu tErrors pro ulozeni vysledneho error kodu
     tExpType type;          // typ prvku na zasobniku
     tVariable *temp;  
-    tVariable *fun_pointer;
     tParamList *parameterList;       
     int param_counter = 0;
     int param_number = 0;
@@ -164,7 +163,11 @@ tErrors SearchFun()
 
         res = FunPtr->ret_type;
         
-        temp->type = FUNCTION;          // ulozeni do instrukce resultu ze je to funkce
+        if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
+            return E_INTERN;
+        if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
+            return E_INTERN;
+
         temp->name = FunPtr->name;
         temp->value.param_pointer = parameterList->first;
 
