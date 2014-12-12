@@ -10,8 +10,8 @@ TStack stack;           //Globálna premenná  pre zásobník
 
 tErrors interpret()											// interpret
 {
-    tTapeItem *savepositionCall=NULL;
-    tTapeItem *savepositionJump=NULL;
+  //  tTapeItem *savepositionCall=NULL;
+//    tTapeItem *savepositionJump=NULL;
     tParamItem *hodnota,*phodnota;
 	stackinit(&stack);
 	Tape->active = Tape->first;																		// inicializace pole
@@ -28,15 +28,21 @@ printf("01 \n");
 			printf(" ass je %d \n",Tape->active->op1->value.ival);
 					printf(" ass je %d \n",Tape->active->previous->result->value.ival);
 
-	/*		if(Tape->active->op2->value.valFull==FALSE|| phodnota->value.valFull==FALSE )
+	/*		if(Tape->active->op2->value.valFull==NODATA)
 			{
                 return E_RUNX;
-			}*/
+			}
+			if(phodnota!=NULL)
+			{
+				if(phodnota->value.valFull==NODATA) return E_RUNX;
+			}
+
+			*/
 printf("01 \n");
 			if(hodnota!=NULL && phodnota!=NULL)
 			{
 			printf("01 \n");
-			
+
 				if(hodnota->type==O_INT && phodnota->type==O_INT)
 				{
 					hodnota->value.ival=phodnota->value.ival;
@@ -136,7 +142,7 @@ printf("01 \n");
 				{
 					Tape->active->op1=Tape->active->op2;
 			printf(" %d \n",Tape->active->op1->value.ival);
-					                                       
+
 
 				}
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_INT)
@@ -178,14 +184,14 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 			if(hodnota!=NULL)
             {
-                if(hodnota->value.valFull==FALSE )
+                if(hodnota->value.valFull==NODATA)
                 {
                 return E_RUNX;
                 }
             }
             else
             {
-                if(Tape->active->op1->value.valFull==FALSE )
+                if(Tape->active->op1->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
@@ -193,14 +199,14 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
             if(phodnota!=NULL)
             {
-                if(phodnota->value.valFull==FALSE )
+                if(phodnota->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
             }
             else
             {
-                if(Tape->active->op2->value.valFull==FALSE )
+                if(Tape->active->op2->value.valFull==NODATA )
                 {
                 return E_RUNX;
                 }
@@ -321,7 +327,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 			else return E_INTERN;*/																				// pokud neni false tak nic nedelej
 		//	if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
 		//	{
-				
+
 				Tape->active=Tape->active->op2->value.tape_pointer;				// a skacu tam kam ukazuje pointer
 				printf("02 \n ");
 				continue;																			// a na zacatek cyklu
@@ -335,10 +341,10 @@ printf(" %d \n",Tape->active->op1->value.ival);
 			TStackTopPop(&stack);
 
 		}*/
-		
+
 		else if (Tape->active->instruction==NOP)
 		{
-		
+
 		printf("nop");
 			Tape->active=Tape->active->next;
 			continue;
@@ -374,7 +380,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				}
 
 				else return E_INTERN;
-                Tape->active->result->value.valFull=TRUE;
+                Tape->active->result->value.valFull=DATA;
 
 	   		}
 	   		else if(hodnota!=NULL && phodnota==NULL)
@@ -406,7 +412,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 
-                Tape->active->result->value.valFull=TRUE;
+                Tape->active->result->value.valFull=DATA;
 	   		}
 
 	   		else if(hodnota==NULL && phodnota!=NULL)
@@ -438,7 +444,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				}
 
 				else return E_INTERN;
-				Tape->active->result->value.valFull=TRUE;
+				Tape->active->result->value.valFull=DATA;
 			}
 
 	   		else
@@ -472,7 +478,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 				}
 
 				else return E_INTERN;
-				Tape->active->result->value.valFull=TRUE;
+				Tape->active->result->value.valFull=DATA;
 			}
 		}
 
@@ -587,7 +593,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************MUL*********************************************************/
@@ -701,7 +707,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************DIV*********************************************************/
@@ -815,7 +821,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 /*********************************************BIGGER******************************************************/
@@ -972,7 +978,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 
@@ -1141,7 +1147,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 /*********************************************ESMALLER****************************************************/
 		else if(Tape->active->instruction==EQL)
@@ -1305,7 +1311,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 /*********************************************NEQUAL******************************************************/
 			else if(Tape->active->instruction==NEQ)
@@ -1461,7 +1467,7 @@ printf(" %d \n",Tape->active->op1->value.ival);
 
 				else return E_INTERN;
 			}
-			Tape->active->result->value.valFull=TRUE;
+			Tape->active->result->value.valFull=DATA;
 		}
 
 
