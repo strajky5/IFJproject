@@ -25,21 +25,18 @@ tErrors interpret()											// interpret
 /*********************************************ASSIG*******************************************************/
 		if(Tape->active->instruction==ASSIGN)
 		{
-//printf("01 \n");
-	//		printf(" ass je %d \n",Tape->active->op1->value.ival);
-					//printf(" ass je %d \n",Tape->active->previous->result->value.ival);
 
-	/*		if(Tape->active->op2->value.valFull==NODATA)
-			{
-                return E_RUNX;
-			}
+			printf("prirazeni ASSIGN  %d \n",Tape->active->op2->value.valFull);
 			if(phodnota!=NULL)
 			{
-				if(phodnota->value.valFull==NODATA) return E_RUNX;
+				if(phodnota->value.valFull==NODATA) return E_RUNVAR;
 			}
+			else if(Tape->active->op2->value.valFull==NODATA && Tape->active->op2->value.ival!=0)
+				return E_RUNVAR;
+			
 
-			*/
-			printf("prirazeni := \n");
+			printf("jak jsem se sem dostal???\n" );
+			
 			if(hodnota!=NULL && phodnota!=NULL)
 			{
 			printf("01 \n");
@@ -148,7 +145,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_INT)
 				{
 					Tape->active->op1->value.rval=Tape->active->op2->value.ival;
-
+					
 				}
 				else if(Tape->active->op1->type==O_BOOL && Tape->active->op2->type==O_BOOL)
 				{
@@ -158,7 +155,7 @@ tErrors interpret()											// interpret
 				else if(Tape->active->op1->type==O_REAL && Tape->active->op2->type==O_REAL)
 				{
 					Tape->active->op1->value.rval=Tape->active->op2->value.rval;
-
+					printf("real=%lf\n",Tape->active->op1->value.rval );
 				}
 				else if(Tape->active->op1->type==O_STRING && Tape->active->op2->type==O_STRING)
 				{
@@ -170,7 +167,36 @@ tErrors interpret()											// interpret
 			}
 
 		}
-		printf("jsem pred funkci\n");
+		printf("tadada   %d\n",Tape->active->op1->value.ival );
+		if(hodnota!=NULL)
+            {
+                if(hodnota->value.valFull==NODATA)
+                {
+                return E_RUNVAR;
+                }
+            }
+            else
+            {
+                if(Tape->active->op1->value.valFull==NODATA )
+                {
+                return E_RUNVAR;
+                }
+            }
+
+            if(phodnota!=NULL)
+            {
+                if(phodnota->value.valFull==NODATA )
+                {
+                return E_RUNVAR;
+                }
+            }
+            else
+            {
+                if(Tape->active->op2->value.valFull==NODATA )
+                {
+                return E_RUNVAR;
+                }
+            }
 		if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 			printf("jsem v funkci\n");
@@ -181,35 +207,7 @@ tErrors interpret()											// interpret
 			stackPush(&stack,&pomocna);												// pushnu si na zasobnik parametry funkce
                                                                                     // nini jdu do funci ktere jsou vestavene
 
-			if(hodnota!=NULL)
-            {
-                if(hodnota->value.valFull==NODATA)
-                {
-                return E_RUNX;
-                }
-            }
-            else
-            {
-                if(Tape->active->op1->value.valFull==NODATA )
-                {
-                return E_RUNX;
-                }
-            }
-
-            if(phodnota!=NULL)
-            {
-                if(phodnota->value.valFull==NODATA )
-                {
-                return E_RUNX;
-                }
-            }
-            else
-            {
-                if(Tape->active->op2->value.valFull==NODATA )
-                {
-                return E_RUNX;
-                }
-            }
+			
 
 			/*if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
 				{
@@ -722,26 +720,32 @@ tErrors interpret()											// interpret
 /*********************************************DIV*********************************************************/
 		else if(Tape->active->instruction==DIV)
 	   {
+
 	   		printf("jsem v div\n");
+	   		printf("nula ma type:%d\n",Tape->active->op2->value.ival );
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 
 				if(hodnota->type == O_INT && phodnota->type == O_INT)
 					{
+						if(phodnota->value.ival==0) return E_RUNDIVZ;
 						Tape->active->result->type=O_REAL;
 						Tape->active->result->value.rval=hodnota->value.ival/phodnota->value.ival;
 					}
 				else if(hodnota->type == O_INT && phodnota->type == O_REAL){
+					if(phodnota->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->value.rval=hodnota->value.ival/phodnota->value.rval;
 					Tape->active->result->type=O_REAL;
 				}
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_INT){
+					if(phodnota->value.ival==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=hodnota->value.rval/phodnota->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && phodnota->type == O_REAL){
+					if(phodnota->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=hodnota->value.rval/phodnota->value.rval;
 				}
@@ -753,22 +757,27 @@ tErrors interpret()											// interpret
 	   		else if(hodnota!=NULL && phodnota==NULL)
 	   		{
 
+
 				if(hodnota->type == O_INT && Tape->active->op2->type == O_INT)
 					{
+						if(Tape->active->op2->value.ival==0) return E_RUNDIVZ;
 						Tape->active->result->type=O_REAL;
 						Tape->active->result->value.rval=hodnota->value.ival/Tape->active->op2->value.ival;
 					}
 				else if(hodnota->type == O_INT && Tape->active->op2->type == O_REAL){
+					if(Tape->active->op2->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->value.rval=hodnota->value.ival/Tape->active->op2->value.rval;
 					Tape->active->result->type=O_REAL;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_INT){
+					if(Tape->active->op2->value.ival==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=hodnota->value.rval/Tape->active->op2->value.ival;
 				}
 
 				else if(hodnota->type == O_REAL && Tape->active->op2->type == O_REAL){
+					if(Tape->active->op2->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=hodnota->value.rval/Tape->active->op2->value.rval;
 				}
@@ -783,21 +792,25 @@ tErrors interpret()											// interpret
 
 				if(Tape->active->op1->type == O_INT && phodnota->type == O_INT)
 					{
+						if(phodnota->value.ival==0) return E_RUNDIVZ;
 						Tape->active->result->type=O_REAL;
 						Tape->active->result->value.rval=Tape->active->op1->value.ival/phodnota->value.ival;
 					}
 
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
+					if(phodnota->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->value.rval=Tape->active->op1->value.ival/phodnota->value.rval;
 					Tape->active->result->type=O_REAL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_INT){
+					if(phodnota->value.ival==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=Tape->active->op1->value.rval/phodnota->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && phodnota->type == O_REAL){
+					if(phodnota->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=Tape->active->op1->value.rval/phodnota->value.rval;
 				}
@@ -810,20 +823,25 @@ tErrors interpret()											// interpret
 
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
+						if(Tape->active->op2->value.ival==0) return E_RUNDIVZ;
 						Tape->active->result->type=O_REAL;
 						Tape->active->result->value.rval=Tape->active->op1->value.ival/Tape->active->op2->value.ival;
+						printf("div : vysledek: %lf\n", Tape->active->result->value.rval);
 					}
-				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
+				else if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_REAL){
+					if(Tape->active->op2->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->value.rval=Tape->active->op1->value.ival/Tape->active->op2->value.rval;
 					Tape->active->result->type=O_REAL;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_INT){
+					if(Tape->active->op2->value.ival==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=Tape->active->op1->value.rval/Tape->active->op2->value.ival;
 				}
 
 				else if(Tape->active->op1->type == O_REAL && Tape->active->op2->type == O_REAL){
+					if(Tape->active->op2->value.rval==0) return E_RUNDIVZ;
 					Tape->active->result->type=O_REAL;
 					Tape->active->result->value.rval=Tape->active->op1->value.rval/Tape->active->op2->value.rval;
 				}
@@ -960,7 +978,7 @@ tErrors interpret()											// interpret
 						Tape->active->result->type=O_BOOL;
 						
 						Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
-						printf("jsem v bigger a vracim %d\n",Tape->active->op1->value.ival>Tape->active->op2->value.rval);
+						printf("jsem v bigger a vracim %d\n",Tape->active->result->value.bval);
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
 					Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.rval;
