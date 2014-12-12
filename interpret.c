@@ -17,7 +17,7 @@ tErrors interpret()											// interpret
 	Tape->active = Tape->first;																		// inicializace pole
 	while(Tape->active != Tape->last)
 	{
-	printf("jsem v while-----------------------------------\n");
+	printf("jsem v Interpret------------------------------------------------------------------------\n");
 	printf("00 %d\n",Tape->active->instruction);
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
@@ -39,7 +39,7 @@ tErrors interpret()											// interpret
 			}
 
 			*/
-printf("prirazeni := \n");
+			printf("prirazeni := \n");
 			if(hodnota!=NULL && phodnota!=NULL)
 			{
 			printf("01 \n");
@@ -54,9 +54,9 @@ printf("prirazeni := \n");
 					hodnota->value.rval=phodnota->value.ival;
 
 				}
-				else if(hodnota->type==O_BOOL && phodnota->type==O_REAL)
+				else if(hodnota->type==O_BOOL && phodnota->type==O_BOOL)
 				{
-					hodnota->value.rval=phodnota->value.rval;
+					hodnota->value.bval=phodnota->value.bval;
 
 					hodnota->type=O_REAL;
 				}
@@ -136,11 +136,12 @@ printf("prirazeni := \n");
 			}
 			else if(hodnota==NULL && phodnota==NULL)
 			{
-			printf("01 \n");
+				
 				if(Tape->active->op1->type==O_INT && Tape->active->op2->type==O_INT)
 				{
-					Tape->active->op1=Tape->active->op2;
-			printf(" %d \n",Tape->active->op1->value.ival);
+					Tape->active->op1->value.ival=Tape->active->op2->value.ival;
+					Tape->active->result->value.ival=Tape->active->op1->value.ival;
+					printf("%d := %d\n",Tape->active->op1->value.ival, Tape->active->op2->value.ival);
 
 
 				}
@@ -311,7 +312,7 @@ printf("prirazeni := \n");
 
 		if (Tape->active->instruction==JUMPN)											// pokud jde o if neho while tak kontroluji na jump
 		{
-		printf("jumpN\n ");
+		
 		    //savepositionJump=Tape->active;
 		    //Tape->active->op2->value.tape_pointer=savepositionJump;
 			/*if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
@@ -324,19 +325,20 @@ printf("prirazeni := \n");
 			else return E_INTERN;*/																				// pokud neni false tak nic nedelej
 			if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
 			{
-
+				printf("jumpN\n ");
 				Tape->active=Tape->active->op2->value.tape_pointer;				// a skacu tam kam ukazuje pointer
 				printf("po skoku \n ");
 				continue;																			// a na zacatek cyklu
 			}
+		
+		//	else return E_INTERN;
+
+		}
 		else if (Tape->active->instruction==JUMP)
 		{
 			printf("jump\n ");
 			Tape->active=Tape->active->op2->value.tape_pointer;
 			continue;
-		}
-		//	else return E_INTERN;
-
 		}
 	/*	else if (Tape->active->instruction==NOP)
 		{
@@ -356,6 +358,7 @@ printf("prirazeni := \n");
 	   else if(Tape->active->instruction==ADD)
 	   {
 	   		printf("jsem v ADD\n");
+	   		printf("a v add := %d\n",Tape->active->previous->op1->value.ival);
 	   		if(hodnota!=NULL && phodnota!=NULL)
 	   		{
 	   			if(hodnota->type == O_STRING && phodnota->type == O_STRING)
@@ -460,8 +463,10 @@ printf("prirazeni := \n");
 					}
 				else if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
-						Tape->active->result->type=O_INT;
+						printf("predchozi a=%d a niniejsi a=%d \n",Tape->active->previous->op1->value.ival,Tape->active->op1->value.ival);
+						printf("soucet%d+%d\n",Tape->active->op1->value.ival,Tape->active->op2->value.ival);
 						Tape->active->result->value.ival=Tape->active->op1->value.ival+Tape->active->op2->value.ival;
+						printf("soucet%d+%d\n",Tape->active->op1->value.ival,Tape->active->op1->value.ival);
 						printf("vysledok je : %d \n",Tape->active->result->value.ival);
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
@@ -953,8 +958,9 @@ printf("prirazeni := \n");
 				if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
 						Tape->active->result->type=O_BOOL;
-						printf("jsem v bigger a vracim %d\n",Tape->active->op1->value.ival>Tape->active->op2->value.rval);
+						
 						Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.ival;
+						printf("jsem v bigger a vracim %d\n",Tape->active->op1->value.ival>Tape->active->op2->value.rval);
 					}
 				else if(Tape->active->op1->type == O_INT && phodnota->type == O_REAL){
 					Tape->active->result->value.bval=Tape->active->op1->value.ival>Tape->active->op2->value.rval;
@@ -997,6 +1003,7 @@ printf("prirazeni := \n");
 				Tape->active->op1=Tape->active->op2;
 				Tape->active->op2=prohozeni;
 				Tape->active->instruction=MORE;
+
 				continue;
 		}
 
@@ -1476,7 +1483,7 @@ printf("prirazeni := \n");
 			}
 			//Tape->active->result->value.valFull=DATA;
 		}
-
+		printf("a := %d\n",Tape->active->op1->value.ival);
 		printf("posunuti pasky\n");
 		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
 	}
