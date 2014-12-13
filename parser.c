@@ -517,8 +517,8 @@ int commands()
 
 tErrors writefun() {
      if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+	 Tape->last->instruction = WRITE;
 	if((error = testToken(T_ID)) == E_OK){
-	Tape->last->instruction = WRITE;
 	  if(afun == 1){
 	    if(strCmpstring(&(T.s), &ActFun) != 0){                             //added: Jmeno fkce, params, global, local
 		  if (searchParam(paramlist, &(T.s)) == NULL){
