@@ -27,13 +27,13 @@ tErrors interpret()											// interpret
 		{
 			printf("jsem v Assign\n");
 
-			/*if(phodnota!=NULL)
+			if(phodnota!=NULL)
 			{
 				if(phodnota->value.valFull==NODATA) return E_RUNVAR;
 			}
-			else if(Tape->active->op2->value.valFull==NODATA && Tape->active->op2->value.ival!=0)
-				return E_RUNVAR;*/
-			
+			else if(Tape->active->op2->value.valFull==NODATA)
+				//return E_RUNVAR;
+				printf("Erun\n");
 
 			
 			

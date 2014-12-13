@@ -24,7 +24,7 @@ typedef enum {                  // typ operandu na pasku
 
 typedef enum {                  // typ operandu na pasku
     DATA,
-    NODATA                     // 0 nema hodnotu 
+    NODATA                     // 1 nema hodnotu 
 } tBool;
 
 typedef enum {                  // instrukce na pasku
