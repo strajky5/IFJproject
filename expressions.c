@@ -469,7 +469,7 @@ tErrors ExpStackPush (tExpStack *L, tExpType val, tVariable *item)
     if(T.type == T_ID)              // pokud typ tokenu je ID (nejaka promenna) 
     {
         temp->tempVarPtr = item;    // uloz mi ukazatel na promennou do stromu LBVS/GBVS
-        temp->tempVarPtr->value.valFull = NODATA;
+        temp->tempVarPtr->valFull = NODATA;
     }
     L->Top = temp;					// ulozeni prvku do ukazatele na vrchol zasobniku
 

@@ -51,7 +51,6 @@ typedef union {                 // hodnota daneho tokenu po konvertovani
     int ival;                   // promenna pro integer
     double rval;                // promenna pro real
     bool bval;                  // promenna pro boolean
-    tBool valFull;              // ma/nema hodnutu
     string sval;                // promenna pro string
     tTapeItem *tape_pointer;    // typ ukazatel pro vysledky na pasce
     tParamItem *param_pointer;  // typ ukazatel pro vysledky parametru funkce
@@ -61,6 +60,7 @@ typedef struct {                // prvek pro ulozeni informaci o tokenu ID(INT,R
     tOperand type;              // jaky je to typ
     string name;                // nazev tokenu
     tValue value;               // hodnota tokenu
+    tBool valFull;              // ma/nema hodnutu
 } tVariable;
 
 //############################# TAPE ##############################################
