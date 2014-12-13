@@ -90,13 +90,13 @@ int program() {
 		    gettoken();
 			if (!strCmpConstStr (&(T.s), "end")){           //BEGIN END. - prazdne
 			    gettoken();
-               	if ((error = testToken(T_DOT)) != E_OK) return error;
-		          gettoken();
-		        if ((error = testToken(T_EOF)) != E_OK) return error;
-					error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+									error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
 					if (error == E_INTERN)
 						return error;
 					Tape->last->instruction = NOP;
+               	if ((error = testToken(T_DOT)) != E_OK) return error;
+		          gettoken();
+		        if ((error = testToken(T_EOF)) != E_OK) return error;
 				return E_OK;
 			}
 	        if ((error  = blockList()) != E_OK) return error;
@@ -123,6 +123,10 @@ int program() {
 		  return E_SYN;
 		  }
     }
+				error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+					if (error == E_INTERN)
+						return error;
+					Tape->last->instruction = NOP;
 		gettoken();
 		if ((error = testToken(T_DOT)) != E_OK) return error;
 		gettoken();
@@ -182,15 +186,16 @@ int function() {
 
 		item = searchFunListN(&name);
 		if((item != NULL)) {
-
+		printf("tu sa nikdy nedostane \n");
 		if (item->forward != 2)
 		return E_SEMA;
 		}
 		else {
 		fw = 2;
+			printf("tu sa dostane \n");
 		if(insertFunListItem(&name,enumerator,paramlist,fw,pc) != E_OK) return E_INTERN;}
 		if(InsertEmptyItemTape() != E_OK) return E_INTERN;
-		item = searchFunListN(&name);
+		//item = searchFunListN(&name);
 		Tape->last->instruction = FUNC;
 		//item->tape_ptr = Tape->last;
 

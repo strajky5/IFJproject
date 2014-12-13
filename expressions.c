@@ -652,7 +652,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
         }
         ExpStackPush(S, NONTERM, NULL);    //vlozim zpatky na zasobnik novy neterminal
         Tape->last->result = S->Top->tempVarPtr; // ukladam vysledek OP1 a OP2 do result na pasku	
-		printf("exp adreasa resultu v expe : %d \n",S->Top->tempVarPtr);
+		//printf("exp adreasa resultu v expe : %d \n",S->Top->tempVarPtr);
         er = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
         if (er == E_INTERN)
             return er;
@@ -822,7 +822,7 @@ int ExpParser()
         if ((type == KEYWORD) && (stack_type == DOLAR)) // pokud je typ KEYWORD nebo DOLAR
         {   
             if(flag == FALSE)
-            {   printf("%d",sign);
+            {   //printf("%d",sign);
                 er = ExpStackReduct(&S, sign);
                 if (er)                         //pokud redukce neprobehla v poradku
                 {
