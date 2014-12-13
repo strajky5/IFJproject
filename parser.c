@@ -42,7 +42,6 @@ int testToken(tTypes type) { // test tokenu
 }
 
 int parser() {
-	printf("sega");
 	initAlloc(); 
 	BSTInit(&TempTree);
 	Tape = allocate(sizeof(tTape));
@@ -86,7 +85,6 @@ int program() {
 		//if(searchFunListFW() != NULL) return E_SEMA;
 		if((error = searchFunListCH()) != E_OK) return E_SEMA;
 		    gettoken();
-			//printf("main \n");
 			if (!strCmpConstStr (&(T.s), "end")){           //BEGIN END. - prazdne
 			    gettoken();
                	if ((error = testToken(T_DOT)) != E_OK) return error;
@@ -108,7 +106,6 @@ int program() {
 	       if ((error  = function()) != E_OK){
 			   return error;
 		   }
-		   //printf("za funkcwma \n");
 		   afun = 0;    //ADDED
 		   //strFree(&ActFun); //ADDED
 		   if ((error = program()) != E_OK) return error;
