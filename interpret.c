@@ -217,9 +217,9 @@ tErrors interpret()											// interpret
 			Tape->active=Tape->active->next;
 			continue;
 		}
-		printf("ss\n");
+		
 		if(hodnota!=NULL)
-            {printf("dd \n");
+            {
                 if(hodnota->valFull==NODATA)
                 {
                 return E_RUNVAR;
@@ -234,7 +234,7 @@ tErrors interpret()											// interpret
             }
 
             if(phodnota!=NULL)
-            {printf("dd \n");
+            {
                 if(phodnota->valFull==NODATA )
                 {
                 return E_RUNVAR;
@@ -249,38 +249,40 @@ tErrors interpret()											// interpret
                 	}
             	}
             }
-            printf("pred CALL\n");
-		if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
+            printf("pred write\n");
+		
+			if (Tape->active->instruction==WRITE)									// pokud je vestavena funce write delej
+				{
+					tParamItem* param=Tape->active->op1->value.param_pointer;
+					
+					while(param!=NULL)													// cykli dokud nejsi za poslednim parametrem
+					{
+						switch (param->type)
+						{											// budem rozdelovat podle typu
+							case O_INT: printf("%d",param->value.ival);break;			// jde o int tak tiskni int
+							case O_REAL: printf("%f",param->value.rval);break;		// jde o real tak tiskni real
+							case O_BOOL: if(param->value.bval==TRUE)					// jde o bool tiskni bool
+											printf("TRUE");
+										else printf("FALSE");
+										break;
+							case O_STRING: printf("%s",param->value.sval);break;		// jde o string tisku string
+							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
+						}
+
+						param=param->next;									// posunuse na dalsi parametr funkce
+					}
+				}
+		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
-			printf("jsem v funkci\n");
+			/*printf("jsem v funkci\n");
 		    tParamItem *pomocna;
 		    pomocna = Tape->active->op1->value.param_pointer;
 		    printf("%d\n",Tape->active->op1->value.param_pointer->value.ival);
 			printf("po pocmonceeuc\n");
 			stackPush(&stack,&pomocna);		
 			printf("%d\n",pomocna->value.ival);										// pushnu si na zasobnik parametry funkce
-            printf("fuhsdhihsduifudsifhdhufihiusdhfihdyusfhui\n");                                                                        // nini jdu do funci ktere jsou vestavene
+            printf("fuhsdhihsduifudsifhdhufihiusdhfihdyusfhui\n");  */                                                                      // nini jdu do funci ktere jsou vestavene
             
-			if (strCmpConstStr(&Tape->active->op1->name, "write"))									// pokud je vestavena funce write delej
-				{
-					printf("SSSSSSSSSSSSSSSSSS\n");
-					while(stack.top->op1==NULL)													// cykli dokud nejsi za poslednim parametrem
-					{printf("AAAAAAAAAAAAAAAAAAAA\n");
-						switch (stack.top->op1->type)
-						{											// budem rozdelovat podle typu
-							case O_INT: printf("%d",stack.top->op1->value.ival);break;			// jde o int tak tiskni int
-							case O_REAL: printf("%f",stack.top->op1->value.rval);break;		// jde o real tak tiskni real
-							case O_BOOL: if(stack.top->op1->value.bval==TRUE)					// jde o bool tiskni bool
-											printf("TRUE");
-										else printf("FALSE");
-										break;
-							case O_STRING: printf("%s",stack.top->op1->value.sval);break;		// jde o string tisku string
-							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
-						}
-
-						stack.top->op1=stack.top->op1->next;									// posunuse na dalsi parametr funkce
-					}
-				}
 			/*
 			else if(strCmpConstStr(&Tape->active->op1->name, "length"))							// pokud jde o length tak
 			{
