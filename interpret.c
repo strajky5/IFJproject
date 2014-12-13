@@ -464,9 +464,10 @@ tErrors interpret()											// interpret
 	   		{
 	   			printf("add\n");
 	   			if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
-					{
+					{printf("eujfdifidjdui\n");
 					if(conc(&Tape->active->op1->value.sval,&Tape->active->op2->value.sval)==NULL)	/// spojeni dvou stringu
 							return E_RUNX;
+						printf("jem zpatttttttttttt:%s\n",Tape->active->op1->value.sval );
 					}
 				else if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
@@ -1593,13 +1594,28 @@ tParamItem *SearchStackName(string*Search)
 string *conc(string*s1,string*s2)
 {
     if (s1==NULL || s2==NULL) return NULL;
-	int i=s1->length;
-	s1->str=(char*) realloc(s1->str,s2->allocSize);
-	while(i<=(i+s2->length))
-    {
-        s1->str[i]=s2->str[i-s1->length];
+    printf("aaaaaaa\n");
+	int i = s1->length;
+	int j = 0;
+	int k;
+	k = j+i;
+	printf("bbbbbbb\n");
+	s1->str = ((char*) realloc(s1->str,(s2->length + s1->length +1)));
+	printf("ccccccc\n");
+	printf("%d \n",i);
+	printf("%d \n",(s2->length));
+	s1->str[7] = 'k';
+	s1->str[8] = '\0';
+	printf("%s\n",s1->str );
+	while(j <= k)
+    {	printf("jecko %d \n",j);
+		printf("icko %d \n",i);
+        s1->str[i+1] = s2->str[j];
+        j++;
         i++;
     }
+    	s1->length=k;
+    	s1->allocSize=k+1;
     return s1;
 }
 string Readstring()
