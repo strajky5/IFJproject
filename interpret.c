@@ -317,10 +317,10 @@ tErrors interpret()											// interpret
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud parametr neni sting error
 				if(stack.top->op1->next->type!=O_STRING) return E_RUNX;							// pokud neni druchu paramter string error
 
-				char* pattern_str = stack.top->op1->value.sval.str;
+				char* String_vzor = stack.top->op1->value.sval.str;
 				char* find_str = stack.top->op1->next->value.sval.str;
 
-				//position = findBM(pattern_str,strGetLength(&stack.top->op1->value.sval), find_str, strGetLength(&stack.top->op1->next->value.sval.str));
+				position = BoyerMoore(String_vzor,strGetLength(&stack.top->op1->value.sval), find_str, strGetLength(&stack.top->op1->next->value.sval.str));
 
 				Tape->active->op1->value.ival = position;
 */

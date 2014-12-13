@@ -197,3 +197,47 @@ void prefixes_pattern(char *pattern_str, int length, int Array_Occurence[])
         Array_Occurence[pattern_str[i]] = length - i - 1;
 }
 */
+//////////////////////BMA verzia mišo/////////////////////
+
+//// Definovanie poľa posunov a dĺžky vstupnej abecedy
+
+private static int shift[]; // pole posunu
+private static final int K = 512; // konecne pole s ktorym sa bude porovnavat spodny retazec
+
+
+ ////// Počiatočné vypočítanie prvkov poľa posunov
+
+ private static void UrobPosun(String_word) { // funkcia na posun
+shift = new int[K]; /////////////  posun si inicializujeme ako pole
+int M = word.length(); //////// do N vlozime dlzku slova 
+for (int i = 0; i < K; i++) { // posuvaj dokym nenarazis nenarazis na rovnaky index
+ shift[i] = M; //posun dlzku slova po tamade kde sa nachadza index
+    }
+for (int i = 0; i < M; i++) {
+ shift[(int)(word.charAt(i))] = M - i -1;
+    }
+ }
+
+
+/////// Hlavná metóda
+
+
+public static int BoyerMoore(String_vzor, String_retaz) {
+ UrobPosun();
+    int M = vzor.length();
+    int N = retaz.length();
+    int i, j;
+    for (i = M - 1, j = M - 1; j > 0; i--, j--) {
+        while (retaz.charAt(i) != vzor.charAt(j)) {
+    int x = shift[(int)(retaz.charAt(i))];
+        if (M - j > x)
+            i += M - j;
+        else
+             i += x;
+        if (i >= N)
+    return -1;
+        j = M - 1;
+        }
+    }
+   return i;
+}
