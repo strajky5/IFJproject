@@ -319,7 +319,6 @@ int commands()
 			  }
 			Tape->last->op2 = Tape->last->previous->result;
 			Tape->last->result = Tape->last->op1;
-			printf("parser adresa resultu v parseri %d \n",Tape->last->op2);
 			if ((strCmpConstStr (&(T.s), "end"))) {
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				semi = 1;
@@ -517,8 +516,8 @@ int commands()
 }
 
 tErrors writefun() {
+     if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 	if((error = testToken(T_ID)) == E_OK){
-	if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 	Tape->last->instruction = WRITE;
 	  if(afun == 1){
 	    if(strCmpstring(&(T.s), &ActFun) != 0){                             //added: Jmeno fkce, params, global, local
@@ -552,6 +551,16 @@ tErrors writefun() {
 		  return error;
 	}
 	else if((error = testToken(T_STRING)) == E_OK){
+				if ((TempVar = allocate(sizeof(tVariable))) == NULL)	//pokud neni dostatek pameti => E_INTERN
+                    return E_INTERN;
+                if (strInit(&(TempVar->name)) == STR_ERROR)			//pokud funkce init. stringu vrati chybu => E_INTERN
+                    return E_INTERN;
+                TempVar->type = O_STRING;
+                if (strInit(&(TempVar->value.sval)) == STR_ERROR)    //pokud funkce init. stringu vrati chybu => E_INTERN
+                    return E_INTERN;
+                if (strCopystring(&(TempVar->value.sval), &(T.s)) == STR_ERROR)
+                    return E_INTERN;
+        Tape->last->op1 = TempVar;       
 
 		gettoken();
       if((error = testToken(T_RB)) == E_OK){

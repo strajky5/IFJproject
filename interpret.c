@@ -269,7 +269,7 @@ tErrors interpret()											// interpret
 				}
 		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
-			/*printf("jsem v funkci\n");
+			printf("jsem v funkci\n");
 		    tParamItem *pomocna;
 		    pomocna = Tape->active->op1->value.param_pointer;
 		    printf("%d\n",Tape->active->op1->value.param_pointer->value.ival);
