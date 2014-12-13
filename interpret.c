@@ -258,7 +258,7 @@ tErrors interpret()											// interpret
 						switch (Tape->active->op1->type)
 						{											// budem rozdelovat podle typu
 							case O_INT: printf("%d",Tape->active->op1->value.ival);break;			// jde o int tak tiskni int
-							case O_REAL: printf("%g",Tape->active->op1>value.rval);break;		// jde o real tak tiskni real
+							case O_REAL: printf("%g",Tape->active->op1->value.rval);break;		// jde o real tak tiskni real
 							case O_BOOL: if(Tape->active->op1->value.bval==TRUE)					// jde o bool tiskni bool
 											printf("TRUE");
 										else printf("FALSE");
@@ -267,6 +267,7 @@ tErrors interpret()											// interpret
 							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
 						
 				}
+				printf("\n");
 		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 			printf("jsem v funkci\n");
