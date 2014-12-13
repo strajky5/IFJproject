@@ -102,7 +102,7 @@ int program() {
 	        if ((error  = blockList()) != E_OK) return error;
 		}
 	    else if (!strCmpConstStr (&(T.s), "function")) { // funkce
-		
+			
 		      BSTInit(&TempTreeL);
 		      TempVar = allocate(sizeof(tVariable));
 			  afun = 1; // ADDED
@@ -136,6 +136,7 @@ int function() {
 	int fw =0;
 	pc =0;
 	gettoken();
+	printf (" bla ");
 	if ((error = testToken(T_ID)) != E_OK) return error; // ID_funkce - mozna upresnit
 	string name;                                          // tu je vkladanie funkcii do seznamu 98-103
 	if(strInit(&name) != STR_SUCCESS) return E_INTERN;
@@ -166,7 +167,6 @@ int function() {
 	gettoken();
 	if ((error = testToken(T_SEMICOLON)) != E_OK) return error; //  ";"
 	gettoken();
-    
 	switch(T.type){
 
 	case T_KEYWORD:
@@ -200,10 +200,12 @@ int function() {
 		}
 	//	printf("za local decl \n");
 		if (!strCmpConstStr (&(T.s), "begin")) {
+		printf (" bla ");
 			gettoken();
 		//	printf("za bein \n");
 			if ((error = blockList()) != E_OK) return error;
 			gettoken();
+			printf (" bla ");
 		//	printf("semicollon \n");
 			if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 			return E_OK;
@@ -267,36 +269,26 @@ int commands()
     if((name == NULL) || (op1 == NULL) || (op2 == NULL) || (result == NULL)) return E_INTERN;
 	switch(T.type){
 		case T_ID:
-	/*		if(afun == 1){                                 //ADDED pokud neni ve funkci kontroluje jen global
-			  if ((par = searchParam(paramlist, &(T.s))) == NULL){            //added
-			    if(strCmpstring(&(T.s), &ActFun) != 0){ //zde budu muset nejspis dat jen jmenu aktualni fkce
-			      if((loc = BSTSearch (TempTreeL, T.s)) == NULL){
-			        if((glob = BSTSearch (TempTree, T.s)) == NULL){
+			if(afun == 1){                                 //ADDED pokud neni ve funkci kontroluje jen global
+			  if ((par = searchParam(paramlist, &(T.s))) == NULL)
+			  {            //added
+			    if(strCmpstring(&(T.s), &ActFun) != 0)
+				{ //zde budu muset nejspis dat jen jmenu aktualni fkce
+			      if((loc = BSTSearch (TempTreeL, T.s)) == NULL)
+				  {
+			        if((glob = BSTSearch (TempTree, T.s)) == NULL)
+					{
 						return E_SEMA;
-					}*/
-//					else{
-//                      Tape->last->op1 = glob;
-//					}    
-//			      }
-//				  else{
-//                    Tape->last->op1 = loc;
-//				  }
-//			    }
-//				else{
-//                  Tape->last->op1 = item;
-//				}
-//}
-//			  else{
-//                Tape->last->op1 = par;
-//			  }
-//			}
-/*			else {*/
-				if((glob = BSTSearch (TempTree, T.s)) == NULL){
+					}
+				  }    
+			    }
+		      }
+			}
+			else{
+				if((glob = BSTSearch (TempTree, T.s)) == NULL)
 					return E_SEMA;
 				}
-			/*else{
-				  Tape->last->op1 = glob;				}*/
-			//}
+
 
 
 			gettoken();
@@ -536,7 +528,8 @@ tErrors writefun() {
 		if(!(strCmpConstStr(&(T.s), "string"))){
 			TempVar->type = O_STRING;
 			strInit(&TempVar->value.sval);
-		}		
+		}
+		TempVar->valFull = NODATA;		
 		Tape->last->op1 = TempVar;
 	  }
 		gettoken();
