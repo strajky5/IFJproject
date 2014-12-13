@@ -603,6 +603,7 @@ tErrors ExpStackReduct(tExpStack *S, tTabSigns sign)
                         if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
                             return E_INTERN;
                         temp->value.bval = TRUE;
+                        temp->valFull = DATA;
                         temp->type = O_BOOL;
                         Tape->last->instruction = MORE;
                         Tape->last->op2 = temp;
