@@ -252,25 +252,20 @@ tErrors interpret()											// interpret
             printf("pred write\n");
 		
 			if (Tape->active->instruction==WRITE)									// pokud je vestavena funce write delej
-				{
-					tParamItem* param=Tape->active->op1->value.param_pointer;
+				{			
 					
-					while(param!=NULL)													// cykli dokud nejsi za poslednim parametrem
-					{
-						switch (param->type)
+					
+						switch (Tape->active->op1->type)
 						{											// budem rozdelovat podle typu
-							case O_INT: printf("%d",param->value.ival);break;			// jde o int tak tiskni int
-							case O_REAL: printf("%f",param->value.rval);break;		// jde o real tak tiskni real
-							case O_BOOL: if(param->value.bval==TRUE)					// jde o bool tiskni bool
+							case O_INT: printf("%d",Tape->active->op1->value.ival);break;			// jde o int tak tiskni int
+							case O_REAL: printf("%g",Tape->active->op1>value.rval);break;		// jde o real tak tiskni real
+							case O_BOOL: if(Tape->active->op1->value.bval==TRUE)					// jde o bool tiskni bool
 											printf("TRUE");
 										else printf("FALSE");
 										break;
-							case O_STRING: printf("%s",param->value.sval);break;		// jde o string tisku string
+							case O_STRING: printf("%s",Tape->active->op1->value.sval);break;		// jde o string tisku string
 							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
-						}
-
-						param=param->next;									// posunuse na dalsi parametr funkce
-					}
+						
 				}
 		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
