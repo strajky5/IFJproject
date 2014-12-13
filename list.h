@@ -43,6 +43,7 @@ typedef enum {                  // instrukce na pasku
     CALL,                       // 12 volani funkce
     NOP,                        // 13 prazdna instrukce
     JUMPN,                      // 14 instrukce pro skok podmienka
+	WRITE,
     JUMP,
     NOPJ
 } tInstruction;

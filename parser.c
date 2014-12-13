@@ -18,7 +18,8 @@ int testToken(tTypes type);
 int globalDecl();
 int localDecl();
 int ExpParser();
-int writefun();
+tErrors writefun();
+
 
 int var = 0;
 int semi = 0;
@@ -30,6 +31,7 @@ tBSTNodePtr TempTree;
 tBSTNodePtr TempTreeL;
 tVariable *TempVar;
 tParamList *paramlist;
+
 tFunListItem *item; 
 int testToken(tTypes type) { // test tokenu
 	if (T.type != type) { // !
@@ -46,6 +48,7 @@ int parser() {
 	BSTInit(&TempTree);
 	Tape = allocate(sizeof(tTape));
 	paramlist = allocate(sizeof(tParamList));
+
 	initFunList();    
     IniTape();
 	if(insertFunListItemEmbed("length") != E_OK) return E_INTERN;
@@ -252,6 +255,7 @@ int blockList() {
 
 int commands() 
 {
+	tParamList *paramlistfun;
 	tVariable *glob = NULL;
 	tVariable *loc = NULL;
 	tParamList *par = NULL;
@@ -490,15 +494,9 @@ int commands()
 			}
 	        if (!strCmpConstStr (&(T.s), "write")) { //write(ID) !!! integer or real !!!
 				gettoken();
-				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
-                Tape->last->instruction = JUMP;
-                Tape->last->op1 = op1;
-                Tape->last->op1->type = O_BOOL;
-                Tape->last->op1->value.bval = false;
-				
 				if((error = testToken(T_LB)) != E_OK) return error;
 				gettoken();
-				if((error = writefun()) != E_OK) return error;
+				if((error = writefun()) != E_OK) return error;          
 				gettoken();
 			    if ((strCmpConstStr (&(T.s), "end"))) {
 				    if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
@@ -513,8 +511,10 @@ int commands()
 
 }
 
-int writefun() {
+tErrors writefun() {
 	if((error = testToken(T_ID)) == E_OK){
+	if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+	Tape->last->instruction = WRITE;
 	  if(afun == 1){
 	    if(strCmpstring(&(T.s), &ActFun) != 0){                             //added: Jmeno fkce, params, global, local
 		  if (searchParam(paramlist, &(T.s)) == NULL){
@@ -526,6 +526,14 @@ int writefun() {
 	  }
 	  else{
         if((TempVar = BSTSearch(TempTree, T.s)) == NULL) return E_SEMA;
+		if(!(strCmpConstStr(&(T.s), "boolean"))) TempVar->type = O_BOOL;
+		if(!(strCmpConstStr(&(T.s), "integer"))) TempVar->type = O_INT;		
+		if(!(strCmpConstStr(&(T.s), "real")))    TempVar->type = O_REAL;
+		if(!(strCmpConstStr(&(T.s), "string"))){
+			TempVar->type = O_STRING;
+			strInit(&TempVar->value.sval);
+		}		
+		Tape->last->op1 = TempVar;
 	  }
 		gettoken();
       if((error = testToken(T_RB)) == E_OK){
@@ -539,6 +547,7 @@ int writefun() {
 		  return error;
 	}
 	else if((error = testToken(T_STRING)) == E_OK){
+
 		gettoken();
       if((error = testToken(T_RB)) == E_OK){
 		  return E_OK;
@@ -553,7 +562,6 @@ int writefun() {
 	}
 	else
 		return error;
-
 	return E_OK;
 }
 
@@ -575,7 +583,7 @@ int params() {
 	pc++;
 	if(strCmpstring(&IDstr, &ActFun) == 0) return E_SEMA;          //ADDED
 	if (searchParam(paramlist, &IDstr) != NULL) return E_SEMA;    
-	if ((error = insertParam(paramlist,&IDstr, enumerator)) != E_OK) return error;;
+	if ((error = insertParam(paramlist,&IDstr, enumerator)) != E_OK) return error;
 	//strFree(&IDstr);
 	if (testToken(T_SEMICOLON) == E_OK) {  
 	  gettoken();
@@ -783,6 +791,9 @@ void constructInstStringLine1(string *dest, tInstruction instruction) {
         break;
     case FUNC:
         strFromChar(dest, "FUNC");
+        break;
+		   case WRITE:
+        strFromChar(dest, "WRITE");
         break;
     }
 }
