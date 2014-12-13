@@ -45,7 +45,8 @@ typedef enum {                  // instrukce na pasku
     JUMPN,                      // 14 instrukce pro skok podmienka
 	WRITE,
     JUMP,
-    NOPJ
+    NOPJ,
+	READ
 } tInstruction;
 
 typedef union {                 // hodnota daneho tokenu po konvertovani
