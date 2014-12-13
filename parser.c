@@ -311,7 +311,12 @@ int commands()
 			else if (glob != NULL){
 				Tape->last->op1 = glob;
 			}
-			 if (res != Tape->last->op1->type ) return E_SEMB;
+			 if (res != Tape->last->op1->type ){
+			  if (res != 1)
+			   return E_SEMB;
+			  else
+			   Tape->last->op1->type = O_REAL;
+			  }
 			Tape->last->op2 = Tape->last->previous->result;
 			Tape->last->result = Tape->last->op1;
 			printf("parser adresa resultu v parseri %d \n",Tape->last->op2);
