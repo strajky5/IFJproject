@@ -533,9 +533,9 @@ tErrors writefun() {
 			TempVar->type = O_STRING;
 			strInit(&TempVar->value.sval);
 		}
+	  }
 		TempVar->valFull = NODATA;		
 		Tape->last->op1 = TempVar;
-	  }
 		gettoken();
       if((error = testToken(T_RB)) == E_OK){
 		  return E_OK;
