@@ -201,7 +201,7 @@ void prefixes_pattern(char *pattern_str, int length, int Array_Occurence[])
 
 //// Definovanie poľa posunov a dĺžky vstupnej abecedy
 
-private static int shift[]; // pole posunu
+/*private static int shift[]; // pole posunu
 private static final int K = 512; // konecne pole s ktorym sa bude porovnavat spodny retazec
 
 
@@ -240,4 +240,4 @@ public static int BoyerMoore(String_vzor, String_retaz) {
         }
     }
    return i;
-}
+}*/
