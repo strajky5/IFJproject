@@ -61,7 +61,7 @@ int parser() {
         return error;
 	//free(TempVar);
 
-	//error = printTape(Tape);
+	error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
 //	BSTDispose(&TempTree);
 //	printf("eror je %d \n",error);
@@ -363,12 +363,8 @@ int commands()
 				gettoken();
 				if((error = blockList()) != E_OK) return error; //blocklist
 				gettoken();
-				
-				Tape->last->instruction = JUMPN;
-                Tape->last->op1 = op11;
-                Tape->last->op1->type = O_BOOL;
-                Tape->last->op1->value.bval = false;
-                if(strInit(&(Tape->last->op1->name)) != STR_SUCCESS) return E_INTERN;
+				if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+				Tape->last->instruction = JUMP;
                 Tape->last->op2 = op22;
                 Tape->last->op2->type = TAPE_POINTER;
                 endelse = Tape->last;

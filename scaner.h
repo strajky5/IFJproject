@@ -37,8 +37,7 @@ typedef struct {    //struktura tokenu
     string s;       //string na atribut tokenu ak je treba
 } tToken;
 
-
-void gettoken();        //vracia token
-int comment();        //preskakuje komentare v zdrojovom subori
-int keyword(char*sid);        //detekuje keywords
+void gettoken();      //vracia token
+int commentjump();        //preskakuje komentare v zdrojovom subori
+int keywordCH(char*stringID);//detekuje keywords
 #endif 

@@ -6,87 +6,79 @@
 extern FILE*f;
 extern tToken T;
 
-int iskeyword(char*sid) 
+int keywordCH(char*stringID) 
 {
     char*s;
 	s="begin";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
 	s="end";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
 	s="var";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
 	s="then";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
 	s="boolean";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 3;
     else{
 	s="string";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 3;
     else{
 	s="integer";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 3;
     else{
 	s="real";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 3;
     else{
 	s="do";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
     s="else";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
     s="function";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
     s="if";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
     s="forward";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
     s="while";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
 	s="readln";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
     else{
 	s="write";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 1;
- /*   else{
-	s="find";
-    if(strcasecmp (sid,s)==0)
-        return 1;
-    else{
-	s="sort";
-    if(strcasecmp (sid,s)==0)
-        return 1;*/
     else{
     s="false";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 2;
     else{
     s="true";
-    if(strcasecmp (sid,s)==0)
+    if(strcasecmp (stringID,s)==0)
         return 2;
     else{
     return 0;
@@ -101,8 +93,6 @@ int iskeyword(char*sid)
 	}
 	}
 	}
-	//}
-	//}
 	}
 	}
 	}
@@ -112,13 +102,13 @@ int iskeyword(char*sid)
     }
 }
 
-int jumpcomment() //preskocenie komentara
+int commentjump()
 {
     char c;
-        do
-            c=fgetc(f); 
-        while(c != '}'); 
-        return 0;  
+    do
+      c=fgetc(f); 
+    while(c != '}'); 
+    return 0;  
 }
 
 void gettoken()
@@ -129,7 +119,6 @@ void gettoken()
     char h; 
     int state=0; 
     c=fgetc(f); 
-	//printf(" c = %c \n",c);
     if(c==EOF) 
     {
         T.type=T_EOF; 
@@ -143,7 +132,7 @@ void gettoken()
             {
                 if(c == '{') 
                 {
-                    if((x=jumpcomment()) == 1) 
+                    if((x=commentjump()) == 1) 
                     {
                         T.type=T_ERRORTOKEN; 
                         return; 
@@ -190,11 +179,11 @@ void gettoken()
                     return;
                 }
                 else{ 
-                switch(c) //bude prepinat medzi dalsimi moznostami (stale v pociatocnom stave)
+                switch(c) //bude prepinat medzi dalsimi moznostami stale v pociatocnom stave
                 {
                 case '\'': 
                 {
-                    state=11;//->STRING
+                    state=11;//->T_STRING
                     c=fgetc(f);
                     break;
                 }
@@ -212,7 +201,7 @@ void gettoken()
                 }
 				case ':' :
                 {
-                    state=31;//T_COLON/T_ASSIGN
+                    state=14;//T_COLON/T_ASSIGN
 					 c=fgetc(f);
                     break;
                 }
@@ -242,7 +231,7 @@ void gettoken()
                 }
                 case '<' :
                 {
-                    state=23;//T_LESS/T_LESS_EQ
+                    state=12;//T_LESS/T_LESS_EQ
                     if(strAddChar(&(T.s),c)== STR_ERROR)
                     {
                         T.type=T_ERRORSYSTEM; 
@@ -253,7 +242,7 @@ void gettoken()
                 }
                 case '>' :
                 {
-                    state=25;//T_MORE/T_MORE_EQ
+                    state=13;//T_MORE/T_MORE_EQ
                     if(strAddChar(&(T.s),c)== STR_ERROR)
                     {
                         T.type=T_ERRORSYSTEM; 
@@ -313,24 +302,20 @@ void gettoken()
                 }
                 else
                 {
-//					printf(" c = %c \n",c);
                     ungetc(c,f); 
-                    if(iskeyword(strGetStr(&(T.s)))==1){  
+                    if(keywordCH(strGetStr(&(T.s)))==1){  
                         T.type=T_KEYWORD; 
-//						printf("scaner je to key : %s a typ = %d\n",T.s,T.type);
 					}
-					else if (iskeyword(strGetStr(&(T.s)))==3){
+					else if (keywordCH(strGetStr(&(T.s)))==3){
 						T.type=T_DATATYPE;
-//						printf("je to key : %s a datatyp? = %d\n",T.s,T.type);
 					}
                     else{
-                    if(iskeyword(strGetStr(&(T.s)))==2) 
+                    if(keywordCH(strGetStr(&(T.s)))==2) 
                         T.type=T_KONST; 
                     else{                   
                         T.type=T_ID;
                     }					
                     }
-//					printf("vraciam token \n");
                     return; 
                 }
             break;
@@ -593,9 +578,8 @@ void gettoken()
 				state = 11;
 				break;
 			}
-			}
-			
-            case 23 :
+			}			
+            case 12 :
             {
                 if(c=='=')
                 {
@@ -625,7 +609,7 @@ void gettoken()
                 }
             break;
             }
-            case 25 : 
+            case 13 : 
             {
                 if(c=='=')
                 {
@@ -645,7 +629,7 @@ void gettoken()
                 }
             break;
             }
-            case 31 : //:=
+            case 14 : //:=
             {
                 if(c=='=') 
                 {
