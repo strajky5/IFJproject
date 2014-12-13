@@ -477,6 +477,9 @@ int commands()
 			        TempVar = NULL;
 					return E_SEMB;
 				}
+                if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+				Tape->last->instruction = READ;
+				Tape->last->op1 = TempVar;
 				gettoken();
                 if((error = testToken(T_RB)) != E_OK){
 					TempVar = NULL;
@@ -804,8 +807,11 @@ void constructInstStringLine1(string *dest, tInstruction instruction) {
     case FUNC:
         strFromChar(dest, "FUNC");
         break;
-		   case WRITE:
+	case WRITE:
         strFromChar(dest, "WRITE");
+        break;
+	case READ:
+        strFromChar(dest, "READ");
         break;
     }
 }
