@@ -17,8 +17,6 @@ tErrors interpret()											// interpret
 	Tape->active = Tape->first;																		// inicializace pole
 	while(Tape->active != Tape->last->next)
 	{
-	printf("jsem v Interpret------------------------------------------------------------\n");
-	printf("instrukce na zacatku interpetu %d\n",Tape->active->instruction);
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
 
@@ -213,10 +211,30 @@ tErrors interpret()											// interpret
 		else if (Tape->active->instruction==NOP)
 		{
 
-		printf("jsem v nop\n");
 			Tape->active=Tape->active->next;
 			continue;
 		}
+		if(Tape->active->instruction==READ)							// pokud je readln
+			{
+				switch (Tape->active->op1->type)
+				{													// kontroluji podle typu
+					case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
+								Tape->active->result=Tape->active->op1;
+								Tape->active->op1->valFull=DATA;
+								break;
+					case O_REAL:scanf("%lf",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
+								Tape->active->result=Tape->active->op1;
+								Tape->active->op1->valFull=DATA;
+								break;
+					case O_STRING:
+                                Tape->active->op1->value.sval=Readstring();
+                                Tape->active->result=Tape->active->op1;
+                                Tape->active->op1->valFull=DATA;
+								break;
+					default : return E_RUNX;
+				}
+                
+			}
 		
 		if(hodnota!=NULL)
             {
@@ -253,7 +271,7 @@ tErrors interpret()											// interpret
 		
 			if (Tape->active->instruction==WRITE)									// pokud je vestavena funce write delej
 				{			
-					printf("ve write\n");
+					
 					
 						switch (Tape->active->op1->type)
 						{											// budem rozdelovat podle typu
@@ -266,32 +284,9 @@ tErrors interpret()											// interpret
 							case O_STRING: printf("%s",Tape->active->op1->value.sval.str);break;		// jde o string tisku string
 							default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
 						
+						}
 				}
-				printf("\n");
-			/*else if(Tape->active->instruction==READ)							// pokud je readln
-			{
-				switch (Tape->active->op1->type)
-				{													// kontroluji podle typu
-					case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
-								Tape->active->result->type=O_INT;									// nastavim typ na int
-								Tape->active->result->ival==Tape->active->op1->value.ival;
-								Tape->active->op1->valFull=DATA;
-								break;
-					case O_REAL:scanf("%lf",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
-								Tape->active->result->value.rval=Tape->active->op1->value.rval;
-								Tape->active->result->type=O_REAL;									// nasatavim typ
-								Tape->active->op1->valFull=DATA;
-								break;
-					case O_STRING:
-                                Tape->active->op1->value.sval=Readstring();
-                                Tape->active->result->type=O_STRING;
-                                Tape->active->op1->valFull=DATA;
-                                strCopystring(Tape->active->result->value.sval, Tape->active->op1->value.sval);
-								break;
-					default : return E_RUNX;
-				}
-                Tape->active->op1->value.valFull=TRUE;
-			}*/
+			
 		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 			printf("jsem v funkci\n");
@@ -357,13 +352,13 @@ tErrors interpret()											// interpret
    /*             Tape->active->op1->value.valFull=TRUE;
 			}
 			
-          */if(Tape->active->instruction==CALL)											// kdyz je to funkce vlastni tak je tam call
+          if(Tape->active->instruction==CALL)											// kdyz je to funkce vlastni tak je tam call
 			{
 			    Tape->active=Tape->active->op2->value.tape_pointer;
 			    continue;
                                                         																		// vratim se na zacatek cyklu
 			}
-		}
+		}*/
 		
 		/*********************************************ADD*********************************************************/
 	   else if(Tape->active->instruction==ADD)
@@ -1526,7 +1521,7 @@ tErrors interpret()											// interpret
 			//Tape->active->result->value.valFull=DATA;
 		}
 		
-		printf("posunuti pasky\n");
+		
 		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
 	}
 
@@ -1625,8 +1620,12 @@ string *conc(string*s1,string*s2)
 string Readstring()
 {
     char a;
-    string vracim;
-    while(scanf("%c",&a)==EOF)
-    strAddChar(&vracim, a);
-    return vracim;
+    while(scanf("%c",&a)!=EOF)
+    {
+    	printf("char:%c\n",a );
+    	
+    }
+    
+	
+    return Tape->active->op1->value.sval;
 }
