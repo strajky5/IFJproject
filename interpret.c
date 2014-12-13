@@ -15,7 +15,7 @@ tErrors interpret()											// interpret
     tParamItem *hodnota,*phodnota;
 	stackinit(&stack);
 	Tape->active = Tape->first;																		// inicializace pole
-	while(Tape->active != Tape->last)
+	while(Tape->active != Tape->last->next)
 	{
 	printf("jsem v Interpret------------------------------------------------------------\n");
 	printf("instrukce na zacatku interpetu %d\n",Tape->active->instruction);
