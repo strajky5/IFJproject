@@ -32,8 +32,8 @@ tErrors interpret()											// interpret
 				if(phodnota->valFull==NODATA) return E_RUNVAR;
 			}
 			else if(Tape->active->op2->valFull==NODATA)
-				//return E_RUNVAR;
-				printf("Erun\n");
+				return E_RUNVAR;
+				
 
 			
 			
@@ -166,20 +166,68 @@ tErrors interpret()											// interpret
 				}
 				else return E_INTERN;
 
+
+				Tape->active->op1->valFull=DATA;
+
 			}
 
 		}
+
+		if (Tape->active->instruction==JUMPN)											// pokud jde o if neho while tak kontroluji na jump
+		{
 		
-		/*if(hodnota!=NULL)
+		    //savepositionJump=Tape->active;
+		    //Tape->active->op2->value.tape_pointer=savepositionJump;
+			/*if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
+			{
+				savepositionJump=Tape->active->op1->value.tape_pointer;
+				Tape->active=Tape->active->result->value.tape_pointer;				// a skacu tam kam ukazuje pointer
+				printf("02 \n ");
+				continue;																			// a na zacatek cyklu
+			}
+			else return E_INTERN;*/																				// pokud neni false tak nic nedelej
+			if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
+			{
+				printf("jumpN\n ");
+				Tape->active=Tape->active->op2->value.tape_pointer;				// a skacu tam kam ukazuje pointer
+				printf("po skoku \n ");
+				continue;																			// a na zacatek cyklu
+			}
+		
+		//	else return E_INTERN;
+
+		}
+		else if (Tape->active->instruction==JUMP)
+		{
+			printf("jump\n ");
+			Tape->active=Tape->active->op2->value.tape_pointer;
+			continue;
+		}
+	/*	else if (Tape->active->instruction==NOP)
+		{
+			Tape->active=savepositionCall->next;
+			TStackTopPop(&stack);
+
+		}*/
+
+		else if (Tape->active->instruction==NOP)
+		{
+
+		printf("jsem v nop\n");
+			Tape->active=Tape->active->next;
+			continue;
+		}
+		
+		if(hodnota!=NULL)
             {
-                if(hodnota->value.valFull==NODATA)
+                if(hodnota->valFull==NODATA)
                 {
                 return E_RUNVAR;
                 }
             }
             else
             {
-                if(Tape->active->op1->value.valFull==NODATA )
+                if(Tape->active->op1->valFull==NODATA )
                 {
                 return E_RUNVAR;
                 }
@@ -187,18 +235,18 @@ tErrors interpret()											// interpret
 
             if(phodnota!=NULL)
             {
-                if(phodnota->value.valFull==NODATA )
+                if(phodnota->valFull==NODATA )
                 {
                 return E_RUNVAR;
                 }
             }
             else
             {
-                if(Tape->active->op2->value.valFull==NODATA )
+                if(Tape->active->op2->valFull==NODATA )
                 {
                 return E_RUNVAR;
                 }
-            }*/
+            }
             
 		if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
@@ -310,50 +358,7 @@ tErrors interpret()											// interpret
                                                         																		// vratim se na zacatek cyklu
 			}
 		}
-		if (Tape->active->instruction==JUMPN)											// pokud jde o if neho while tak kontroluji na jump
-		{
 		
-		    //savepositionJump=Tape->active;
-		    //Tape->active->op2->value.tape_pointer=savepositionJump;
-			/*if(Tape->active->previous->result->value.bval==FALSE && Tape->active->previous->result->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
-			{
-				savepositionJump=Tape->active->op1->value.tape_pointer;
-				Tape->active=Tape->active->result->value.tape_pointer;				// a skacu tam kam ukazuje pointer
-				printf("02 \n ");
-				continue;																			// a na zacatek cyklu
-			}
-			else return E_INTERN;*/																				// pokud neni false tak nic nedelej
-			if(Tape->active->op1->value.bval==FALSE && Tape->active->op1->type==O_BOOL) // kdyz je predchozi vysledek false tak skacu
-			{
-				printf("jumpN\n ");
-				Tape->active=Tape->active->op2->value.tape_pointer;				// a skacu tam kam ukazuje pointer
-				printf("po skoku \n ");
-				continue;																			// a na zacatek cyklu
-			}
-		
-		//	else return E_INTERN;
-
-		}
-		else if (Tape->active->instruction==JUMP)
-		{
-			printf("jump\n ");
-			Tape->active=Tape->active->op2->value.tape_pointer;
-			continue;
-		}
-	/*	else if (Tape->active->instruction==NOP)
-		{
-			Tape->active=savepositionCall->next;
-			TStackTopPop(&stack);
-
-		}*/
-
-		else if (Tape->active->instruction==NOP)
-		{
-
-		printf("jsem v nop\n");
-			Tape->active=Tape->active->next;
-			continue;
-		}
 		/*********************************************ADD*********************************************************/
 	   else if(Tape->active->instruction==ADD)
 	   {
@@ -470,7 +475,7 @@ tErrors interpret()											// interpret
 						printf("vysledok je : %d \n",Tape->active->result->value.ival);
 					}
 				else if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_REAL){
-					printf("soucet%d+%d\n",Tape->active->op1->value.ival,Tape->active->op1->value.rval);
+					printf("soucet%d+%lf\n",Tape->active->op1->value.ival,Tape->active->op1->value.rval);
 					Tape->active->result->value.rval=Tape->active->op1->value.ival+Tape->active->op2->value.rval;
 					Tape->active->result->type=O_REAL;
 					printf("vysledok je : %lf \n",Tape->active->result->value.rval);
