@@ -578,6 +578,11 @@ void gettoken()
 			{
 				while (c != '\'')
 				{
+					if(strAddChar(&(T.s),c)== STR_ERROR)
+                    {
+                        T.type=T_ERRORSYSTEM; 
+                        return; 
+                    }
 					c=fgetc(f);
 					  if(c==EOF)
                 {
