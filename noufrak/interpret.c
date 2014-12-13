@@ -166,6 +166,9 @@ tErrors interpret()											// interpret
 				}
 				else return E_INTERN;
 
+
+				Tape->active->op1->valFull=DATA;
+
 			}
 
 		}
