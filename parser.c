@@ -61,7 +61,7 @@ int parser() {
         return error;
 	//free(TempVar);
 
-	error = printTape(Tape);
+	//error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
 //	BSTDispose(&TempTree);
 //	printf("eror je %d \n",error);
@@ -194,9 +194,9 @@ int function() {
 		fw = 2;
 			printf("tu sa dostane \n");
 		if(insertFunListItem(&name,enumerator,paramlist,fw,pc) != E_OK) return E_INTERN;}
-		if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+		//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 		//item = searchFunListN(&name);
-		Tape->last->instruction = FUNC;
+		//Tape->last->instruction = FUNC;
 		//item->tape_ptr = Tape->last;
 
 		if (!strCmpConstStr (&(T.s), "var")) {
@@ -869,10 +869,6 @@ tErrors printTape(tTape *tape) {
         iter = iter->next;
     }
 
-    strFree(&inst);
-    strFree(&op1);
-    strFree(&op2);
-    strFree(&result);
 	return E_OK;
 }
 

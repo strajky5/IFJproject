@@ -292,7 +292,6 @@ tFunListItem *searchFunList(string *name)             // vyhleda danou funkci v 
 tErrors searchFunListCH()             // vyhleda danou funkci v tabulce a vraci ukazatel na ni, pokud nenajde vraci NULL 
 {
     tFunListItem *item = funList.first;                        // vytvori ukazatel na prvni prvek seznamu
-    
     while(item != NULL)                                        // cykli dokud neni na konci seznamu
     {
  		if(item->forward != 2) 			   // porovnej jestly se schoduji nazvy funkci        
@@ -378,12 +377,16 @@ void IniTape()                               // inicializace pasky
 tErrors InsertEmptyItemTape()                         // vlozeni prazdneho prvku na konec seznamu
 {
     tTapeItem* pointer;    
-
+	tVariable* temp;
     if((pointer=allocate(sizeof(tTapeItem)))==NULL)     // alokuji si pamet o velikosti prvku a nahraji ho do ukazatele
         return E_INTERN;                                                // kdyz se neco pokazi vratime interni chybu
     pointer->op1=NULL;                                              // jinak inicializuji prvek tak ze do op1 nahraji null
     pointer->op2=NULL;                                              // do op2 taky nahraji null
-    pointer->result=NULL;                                           // do result --||--
+      if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
+                            return E_INTERN;
+                        if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
+                            return E_INTERN;
+	pointer->result=temp;                                           // do result --||--
     pointer->previous=NULL;                                         // do predchoziho nahraji null
     pointer->next=NULL;                                             // do dalsiho nahraji null
 
@@ -401,15 +404,3 @@ tErrors InsertEmptyItemTape()                         // vlozeni prazdneho prvku
     }
     return E_OK;                                                    // vracim e_ok
 }
-
-/*void WriteTape()
-{
-    while(Tape->active->next != NULL)
-    {
-        printf("\n");
-        printf("|OP1:%d|INST:%d|OP2:%d|RESULT:%d \n",Tape->active->op1->type,Tape->active->instruction,Tape->active->op2->type,Tape->active->result->type);
-        printf("|OP1:%d|INST:%d|OP2:%d|RESULT:%d \n",Tape->active->op1->name,Tape->active->instruction,Tape->active->op2->name,Tape->active->result->name);
-        Tape->active = Tape->active->next;
-    }
-
-}*/
