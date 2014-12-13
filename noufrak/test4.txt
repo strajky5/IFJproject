@@ -1,0 +1,9 @@
+var
+ a: integer;
+ b: real;
+begin
+a:=7;
+a:=a + 7
+
+end
+end.
