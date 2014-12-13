@@ -29,9 +29,9 @@ tErrors interpret()											// interpret
 
 			if(phodnota!=NULL)
 			{
-				if(phodnota->value.valFull==NODATA) return E_RUNVAR;
+				if(phodnota->valFull==NODATA) return E_RUNVAR;
 			}
-			else if(Tape->active->op2->value.valFull==NODATA)
+			else if(Tape->active->op2->valFull==NODATA)
 				//return E_RUNVAR;
 				printf("Erun\n");
 
