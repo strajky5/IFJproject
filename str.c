@@ -70,8 +70,8 @@ int strCopystring(string *s1, string *s2) //kopirovanie stringov
          return STR_ERROR;
       s1->allocSize = newLength + 1;
    }
+      s1->length = newLength;
    strcpy(s1->str, s2->str);
-   s1->length = newLength;
    return STR_SUCCESS;
 }
 
