@@ -1612,7 +1612,7 @@ string *conc(string*s1,string*s2)
 	int k;
 	k = j+i;
 	
-	s1->str = ((char*) realloc(s1->str,(k +1)));
+	s1->str = ((char*) reallocate(s1->str,(k +1)));
 	j=0;
 	
 	while(i <= k)

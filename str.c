@@ -66,7 +66,7 @@ int strCopystring(string *s1, string *s2) //kopirovanie stringov
    if (newLength >= s1->allocSize)
    {
       // pamet nestaci, je potreba provest realokaci
-      if ((s1->str = (char*) realloc(s1->str, newLength + 1)) == NULL)
+      if ((s1->str = (char*) reallocate(s1->str, newLength + 1)) == NULL)
          return STR_ERROR;
       s1->allocSize = newLength + 1;
    }

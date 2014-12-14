@@ -140,6 +140,21 @@ tAllocItem *searchAlloc(void *pointer)  // vyhleda dany pointer v seznamu alokac
     return NULL;        // pokud nebyl nalezen prvek, vrat NULL
 }
 
+void *reallocate(void *pointer, size_t bytes) {
+	printf("adasfa ");
+    tAllocItem *old = searchAlloc(pointer);
+    if(old == NULL) {
+        return NULL;
+    }
+    void *alloc = realloc(pointer, bytes);
+    if(alloc != NULL) {
+        old->allocation = alloc;
+        return alloc;
+    } else {
+        return NULL;
+    }
+}
+
 //##################### UVOLNENI PAMETI POINTERU #######################
 void freePointer(void *pointer) 
 {
