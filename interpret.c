@@ -234,6 +234,7 @@ tErrors interpret()											// interpret
 			switch (Tape->active->op1->type)
 			{													// kontroluji podle typu
 				case O_INT: 	Tape->active->op1->value.ival = 0;
+				printf("JE TO int!!!!!!!!\n");
 								scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
 								Tape->active->result->type=O_INT;									// nastavim typ na int
 								Tape->active->result->value.ival = Tape->active->op1->value.ival;
@@ -251,6 +252,8 @@ tErrors interpret()											// interpret
 								Tape->active->op1->valFull=DATA;
 								break;
 				case O_STRING: 	strClear(&(Tape->active->op1->value.sval));
+								strInit(&(vracim));            //pokud funkce init. stringu vrati chybu => E_INTERN
+	                            strClear(&(vracim));
 								Readstring();
 								strCopystring(&(Tape->active->op1->value.sval), &(vracim));
 								strFree(&vracim);
@@ -1631,8 +1634,6 @@ string *conc(string*s1,string*s2)
 string Readstring()
 {
     char a;
-    strInit(&(vracim));            //pokud funkce init. stringu vrati chybu => E_INTERN
-	strClear(&(vracim));
     scanf("%c",&a);
 
     while(a != '\n'){	
