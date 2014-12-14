@@ -221,7 +221,7 @@ void gettoken()
                 }
 				case ':' :
                 {
-                    state=31;//T_COLON/T_ASSIGN
+                    state=14;//T_COLON/T_ASSIGN
 					 c=fgetc(f);
                     break;
                 }
@@ -251,7 +251,7 @@ void gettoken()
                 }
                 case '<' :
                 {
-                    state=23;//T_LESS/T_LESS_EQ
+                    state=12;//T_LESS/T_LESS_EQ
                     if(strAddChar(&(T.s),c)== STR_ERROR)
                     {
                         T.type=T_ERRORSYSTEM; 
@@ -262,7 +262,7 @@ void gettoken()
                 }
                 case '>' :
                 {
-                    state=25;//T_MORE/T_MORE_EQ
+                    state=13;//T_MORE/T_MORE_EQ
                     if(strAddChar(&(T.s),c)== STR_ERROR)
                     {
                         T.type=T_ERRORSYSTEM; 
@@ -322,15 +322,12 @@ void gettoken()
                 }
                 else
                 {
-//					printf(" c = %c \n",c);
                     ungetc(c,f); 
                     if(iskeyword(strGetStr(&(T.s)))==1){  
                         T.type=T_KEYWORD; 
-//						printf("scaner je to key : %s a typ = %d\n",T.s,T.type);
 					}
 					else if (iskeyword(strGetStr(&(T.s)))==3){
 						T.type=T_DATATYPE;
-//						printf("je to key : %s a datatyp? = %d\n",T.s,T.type);
 					}
                     else{
                     if(iskeyword(strGetStr(&(T.s)))==2) 
@@ -339,7 +336,6 @@ void gettoken()
                         T.type=T_ID;
                     }					
                     }
-//					printf("vraciam token \n");
                     return; 
                 }
             break;
@@ -602,9 +598,8 @@ void gettoken()
 				state = 11;
 				break;
 			}
-			}
-			
-            case 23 :
+			}			
+            case 12:
             {
                 if(c=='=')
                 {
@@ -634,7 +629,7 @@ void gettoken()
                 }
             break;
             }
-            case 25 : 
+            case 13: 
             {
                 if(c=='=')
                 {
@@ -654,7 +649,7 @@ void gettoken()
                 }
             break;
             }
-            case 31 : //:=
+            case 14: //:=
             {
                 if(c=='=') 
                 {
