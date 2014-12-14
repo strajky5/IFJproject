@@ -1,8 +1,16 @@
+/* 
+* Názov projektu: Implementace interpretu imperativního jazyka IFJ14 
+* Dátum: 12/2014
+* Autori:  Matúš Cimerman, xcimer00
+*          Tomáš Hynek ,   xhynek09
+*          David Novák ,   xnovak0r
+*          Michal Sedlák , xsedla0m
+*          Jan Jořenek  ,  xjoren01
+*/
 #ifndef maink
 #define maink
 #include <stdio.h>
 #include <ctype.h>
-//#include "str.h"
 #include "scaner.h"
 #include "parser.h"
 #include "errors.h"
