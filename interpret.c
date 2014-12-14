@@ -1,3 +1,12 @@
+/* 
+* Názov projektu: Implementace interpretu imperativního jazyka IFJ14 
+* Dátum: 12/2014
+* Autori: Matúš Cimerman, xcimer00
+*         Tomáš Hynek ,   xhynek09
+*         David Novák ,   xnovak0r
+*         Michal Sedlák , xsedla0m
+*         Jan Jorenek  ,  xjoren01
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include "expressions.h"
@@ -17,8 +26,6 @@ tErrors interpret()											// interpret
 	Tape->active = Tape->first;																		// inicializace pole
 	while(Tape->active != Tape->last->next)
 	{
-	printf("jsem v Interpret------------------------------------------------------------\n");
-	printf("instrukce na zacatku interpetu %d\n",Tape->active->instruction);
 		hodnota=SearchStackName(&Tape->active->op1->name);
 		phodnota=SearchStackName(&Tape->active->op2->name);
 
@@ -213,10 +220,10 @@ tErrors interpret()											// interpret
 		else if (Tape->active->instruction==NOP)
 		{
 
-		printf("jsem v nop\n");
 			Tape->active=Tape->active->next;
 			continue;
 		}
+<<<<<<< HEAD
 
         if(Tape->active->instruction==READ)							// pokud je readln
 		{printf("jsem v read\n");
@@ -241,6 +248,29 @@ tErrors interpret()											// interpret
 				default : return E_RUNX;
 			}
 		}
+=======
+		if(Tape->active->instruction==READ)							// pokud je readln
+			{
+				switch (Tape->active->op1->type)
+				{													// kontroluji podle typu
+					case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
+								Tape->active->result=Tape->active->op1;
+								Tape->active->op1->valFull=DATA;
+								break;
+					case O_REAL:scanf("%lf",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
+								Tape->active->result=Tape->active->op1;
+								Tape->active->op1->valFull=DATA;
+								break;
+					case O_STRING:
+                                Tape->active->op1->value.sval=Readstring();
+                                Tape->active->result=Tape->active->op1;
+                                Tape->active->op1->valFull=DATA;
+								break;
+					default : return E_RUNX;
+				}
+                
+			}
+>>>>>>> origin/master
 		
 		if(hodnota!=NULL)
         {
@@ -265,6 +295,7 @@ tErrors interpret()											// interpret
                	if(Tape->active->op2->valFull==NODATA )
                		return E_RUNVAR;
             }
+<<<<<<< HEAD
         }
         
         if (Tape->active->instruction==WRITE)									// pokud je vestavena funce write delej
@@ -278,13 +309,43 @@ tErrors interpret()											// interpret
 				case O_BOOL: if(Tape->active->op1->value.bval==TRUE)					// jde o bool tiskni bool
 								printf("TRUE");
 							 else printf("FALSE");
+=======
+            else
+            {	if (Tape->active->op2 != NULL)
+            	{
+                	if(Tape->active->op2->valFull==NODATA )
+                	{
+                		return E_RUNVAR;
+                	}
+            	}
+            }
+            
+		
+			if (Tape->active->instruction==WRITE)									// pokud je vestavena funce write delej
+				{			
+					
+					
+						switch (Tape->active->op1->type)
+						{											// budem rozdelovat podle typu
+							case O_INT: printf("%d",Tape->active->op1->value.ival);break;			// jde o int tak tiskni int
+							case O_REAL: printf("%g",Tape->active->op1->value.rval);break;		// jde o real tak tiskni real
+							case O_BOOL: if(Tape->active->op1->value.bval==TRUE)					// jde o bool tiskni bool
+											printf("TRUE");
+										else printf("FALSE");
+>>>>>>> origin/master
 										break;
 				case O_STRING: printf("%s",Tape->active->op1->value.sval.str);break;		// jde o string tisku string
 				default: return E_RUNX;												// pokud neni ani jedna ztechto moznosti tak chyba
 						
+<<<<<<< HEAD
 			}
 		}
 		
+=======
+						}
+				}
+			
+>>>>>>> origin/master
 		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 			printf("jsem v funkci\n");
@@ -347,9 +408,22 @@ tErrors interpret()											// interpret
 			/*	if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ sting error
 				quickSort(stack.top->op1->value.sval.str, 0, strGetLength(&stack.top->op1->value.sval));			// propehne serazeni str get leng da velikost - \0
 			*/	/*Tape->active->op1->type=O_STRING;		*/										// a nastavim typ na string
+<<<<<<< HEAD
 //            Tape->active->op1->value.valFull=TRUE;
 			//}
 			//}
+=======
+   /*             Tape->active->op1->value.valFull=TRUE;
+			}
+			
+          if(Tape->active->instruction==CALL)											// kdyz je to funkce vlastni tak je tam call
+			{
+			    Tape->active=Tape->active->op2->value.tape_pointer;
+			    continue;
+                                                        																		// vratim se na zacatek cyklu
+			}
+		}*/
+>>>>>>> origin/master
 		
 		/*********************************************ADD*********************************************************/
 	   else if(Tape->active->instruction==ADD)
@@ -1512,7 +1586,7 @@ tErrors interpret()											// interpret
 			//Tape->active->result->value.valFull=DATA;
 		}
 		
-		printf("posunuti pasky\n");
+		
 		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
 	}
 
@@ -1611,6 +1685,7 @@ string *conc(string*s1,string*s2)
 string Readstring()
 {
     char a;
+<<<<<<< HEAD
     string vracim;
     strInit(&(vracim));            //pokud funkce init. stringu vrati chybu => E_INTERN
 
@@ -1620,5 +1695,15 @@ string Readstring()
     }while(a != '\n');
     
     return vracim;
+=======
+    while(scanf("%c",&a)!=EOF)
+    {
+    	printf("char:%c\n",a );
+    	
+    }
+    
+	
+    return Tape->active->op1->value.sval;
+>>>>>>> origin/master
 }
 
