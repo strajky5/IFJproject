@@ -6,7 +6,8 @@
 *         David Novák ,   xnovak0r
 *         Michal Sedlák , xsedla0m
 *         Jan Jorenek  ,  xjoren01
-*/#ifndef LIST
+*/
+#ifndef LIST
 #define LIST
 
 #include <stdlib.h>
@@ -113,6 +114,7 @@ typedef struct FunListItem {    // prvek tabulky pro funkce
 	int forward;
     tOperand ret_type;          // navratovy typ funkce
     tParamList *param_list;     // ukazatel na seznam parametru
+    tTapeItem *tape_ptr;
     struct FunListItem *next;  // ukazatel na dalsi prvek seznamu
 } tFunListItem;
 
@@ -141,7 +143,7 @@ typedef struct {                // seznam s alokovanymi prvky
 
 
 void initFunList();                                                          // inicializace tabulky funkci
-tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params, int forward, int paramcount); // vlozeni funkce do tabulky funkci
+tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params, int forward, int paramcount, tTapeItem *tape); // vlozeni funkce do tabulky funkci
 tErrors insertFunListItemEmbed(char *name);                                  // pouziva se pro vlozeni vestavenych funkci do seznamu funkci
 tFunListItem *searchFunList(string *name);                                  // vyhleda danou funkci v tabulce a vraci ukazatel na ni
 tFunListItem *searchFunListN(string *name);

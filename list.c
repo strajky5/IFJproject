@@ -193,7 +193,7 @@ void initFunList()
 }
 
 //#################### VLOZENI FUNKCE DO SEZNAMU ########################
-tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params,int forward, int paramcount)          
+tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params,int forward, int paramcount,  tTapeItem *tape)          
 {
     tFunListItem *item = allocate(sizeof(tFunListItem));                           // alokuje ukazatel na prvek seznamu
     if(item != NULL)                                                               // pokud alokace probehla v poradku
@@ -206,7 +206,7 @@ tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params,int 
         item->forward = forward;               // parametr pocitadlo vynuluj
         item->ret_type = r_type;             // navratovy typ funkce
         item->param_list = params;           // vloz ukazatel na seznam parametru
-        //item->tape_ptr = tape;               // provaz polozku s paskou, ukazatel bude ukazovat kde je funkce na pasce
+        item->tape_ptr = tape;               // provaz polozku s paskou, ukazatel bude ukazovat kde je funkce na pasce
         item->next = NULL;                   // do polozky dalsi nahraj null   
 
         if(funList.first == NULL)            // pokud je seznam funkci prazdny
@@ -243,7 +243,7 @@ tErrors insertFunListItemEmbed(char *name)
         item->forward = 2;              // parametr pocitadlo vynuluj
         item->param_list = NULL;            // NULL
 		item->param_count = 0; 
-     //   item->tape_ptr = NULL;              // NULL
+        item->tape_ptr = tape;             // NULL
         item->next = NULL;                  // NULL   
                                             
         if(funList.first == NULL)           // pokud je seznam funkci prazdny
