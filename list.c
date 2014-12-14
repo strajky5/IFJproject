@@ -242,7 +242,7 @@ tErrors insertFunListItemEmbed(char *name)
         item->forward = 2;              // parametr pocitadlo vynuluj
         item->param_list = NULL;            // NULL
 		item->param_count = 0; 
-        item->tape_ptr = tape;             // NULL
+        //item->tape_ptr = tape;             // NULL
         item->next = NULL;                  // NULL   
                                             
         if(funList.first == NULL)           // pokud je seznam funkci prazdny
