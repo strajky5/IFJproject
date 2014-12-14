@@ -141,7 +141,6 @@ tAllocItem *searchAlloc(void *pointer)  // vyhleda dany pointer v seznamu alokac
 }
 
 void *reallocate(void *pointer, size_t bytes) {
-	printf("adasfa ");
     tAllocItem *old = searchAlloc(pointer);
     if(old == NULL) {
         return NULL;

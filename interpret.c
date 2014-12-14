@@ -233,7 +233,8 @@ tErrors interpret()											// interpret
 			char c;
 			switch (Tape->active->op1->type)
 			{													// kontroluji podle typu
-				case O_INT: 	scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
+				case O_INT: 	Tape->active->op1->value.ival = 0;
+								scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
 								Tape->active->result->type=O_INT;									// nastavim typ na int
 								Tape->active->result->value.ival = Tape->active->op1->value.ival;
 								Tape->active->op1->valFull=DATA;
@@ -249,7 +250,8 @@ tErrors interpret()											// interpret
 								Tape->active->result->type=O_REAL;									// nasatavim typ
 								Tape->active->op1->valFull=DATA;
 								break;
-				case O_STRING: 	Tape->active->op1->value.sval = Readstring();
+				case O_STRING: 	strClear(&(Tape->active->op1->value.sval));
+								Tape->active->op1->value.sval = Readstring();
                                	Tape->active->result->type = O_STRING;
                                	Tape->active->op1->valFull = DATA;
                                	strCopystring(&(Tape->active->result->value.sval), &(Tape->active->op1->value.sval));
@@ -1612,7 +1614,7 @@ string *conc(string*s1,string*s2)
 	int k;
 	k = j+i;
 	
-	s1->str = ((char*) reallocate(s1->str,(k +1)));
+	s1->str = ((char*) realloc(s1->str,(k +1)));
 	j=0;
 	
 	while(i <= k)
@@ -1629,6 +1631,7 @@ string Readstring()
     char a;
     string vracim;
     strInit(&(vracim));            //pokud funkce init. stringu vrati chybu => E_INTERN
+	strClear(&(vracim));
     scanf("%c",&a);
 
     while(a != '\n'){	

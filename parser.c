@@ -70,7 +70,7 @@ int parser() {
         return error;
 	//free(TempVar);
 
-	error = printTape(Tape);
+	//error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
 //	BSTDispose(&TempTree);
 //	printf("eror je %d \n",error);
