@@ -188,24 +188,31 @@ int function() {
 	switch(T.type){
 
 	case T_KEYWORD:
-		if (!strCmpConstStr (&(T.s), "forward")) {
+		if (!strCmpConstStr (&(T.s), "forward")) 
+		{
 			gettoken();
 			fw = 1;
 	
 			if((searchFunListFW(&name)!= NULL)) return E_SEMA;
-			if(insertFunListItem(&name,enumerator,paramlist,fw,pc) != E_OK) return E_INTERN;
+			if(insertFunListItem(&name,enumerator,paramlist,fw,pc,NULL) != E_OK) return E_INTERN;
 			if ((error = testToken(T_SEMICOLON)) != E_OK) return error;  // FORWARD a ";"
 		    return E_OK;
 		}
+
 		item = searchFunListN(&name);
-		if((item != NULL)) {
-		if (item->forward != 2)
-		return E_SEMA;
-		}
-		else {
-		fw = 2;
-		if(insertFunListItem(&name,enumerator,paramlist,fw,pc) != E_OK) return E_INTERN;}
 		if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+
+		if((item != NULL)) 
+		{
+			if (item->forward != 2)
+			return E_SEMA;
+		}
+		else 
+		{
+			fw = 2;
+			if(insertFunListItem(&name,enumerator,paramlist,fw,pc, Tape->last) != E_OK) return E_INTERN;
+		}
+
 		//item = searchFunListN(&name);
 		Tape->last->instruction = FUNC;
 		op1->name = name;
@@ -280,6 +287,9 @@ int commands()
     tVariable *op1 = allocate(sizeof(tVariable));
     tVariable *op2 = allocate(sizeof(tVariable));
     tVariable *result = allocate(sizeof(tVariable));
+    tFunListItem *fun_item;
+    tVariable *temp; 
+    int fun = 0;
     if((name == NULL) || (op1 == NULL) || (op2 == NULL) || (result == NULL)) return E_INTERN;
 	switch(T.type){
 		case T_ID:
@@ -296,6 +306,10 @@ int commands()
 					}
 				  }    
 			    }
+			    else
+			    {
+			    	fun = 1;
+			    }
 		      }
 			}
 			else{
@@ -303,21 +317,32 @@ int commands()
 					return E_SEMA;
 				}
 
-
-
 			gettoken();
 			if ((error = testToken(T_ASSIGN)) != E_OK) return error;
 			if ((error = ExpParser()) != E_OK) return error;
+			printf("za ExpPar\n");
 			//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 			Tape->last->instruction = ASSIGN;
-	       
-			if (loc != NULL){
+	       printf("FUNCKE: %s %d\n",ActFun,fun);
+	        if (searchFunList(&ActFun) != NULL)
+			{	
+				if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
+            		return E_INTERN;
+        		if (strInit(&(temp->name)) == STR_ERROR)            //pokud funkce init. stringu vrati chybu => E_INTERN
+            		return E_INTERN;
+				fun_item = searchFunList(&ActFun); 
+				temp->name = fun_item->name;
+				temp->type = fun_item->ret_type;
+				Tape->last->op1 = temp;
+			}
+			else if (loc != NULL){
 				Tape->last->op1 = loc;
 			}
 			else if (glob != NULL){
 				Tape->last->op1 = glob;
 			}
-			 if (res != Tape->last->op1->type ){
+
+			if (res != Tape->last->op1->type ){
 			  if (res != 1)
 			   return E_SEMB;
 			  else
@@ -326,9 +351,11 @@ int commands()
 			Tape->last->op2 = Tape->last->previous->result;
 			Tape->last->result = Tape->last->op1;
 			if ((strCmpConstStr (&(T.s), "end"))) {
+				printf("%s\n",&T.s);
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				semi = 1;
 			}
+			printf("konec parseru\n");
 			break;
 
 		case T_KEYWORD:
