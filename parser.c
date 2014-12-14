@@ -70,7 +70,7 @@ int parser() {
         return error;
 	//free(TempVar);
 
-	//error = printTape(Tape);
+	error = printTape(Tape);
 //	BSTDispose(&TempTreeL);
 //	BSTDispose(&TempTree);
 //	printf("eror je %d \n",error);
@@ -320,10 +320,8 @@ int commands()
 			gettoken();
 			if ((error = testToken(T_ASSIGN)) != E_OK) return error;
 			if ((error = ExpParser()) != E_OK) return error;
-			printf("za ExpPar\n");
 			//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 			Tape->last->instruction = ASSIGN;
-	       printf("FUNCKE: %s %d\n",ActFun,fun);
 	        if (searchFunList(&ActFun) != NULL)
 			{	
 				if ((temp = allocate(sizeof(tVariable))) == NULL)    //pokud neni dostatek pameti => E_INTERN
@@ -355,7 +353,6 @@ int commands()
 				if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 				semi = 1;
 			}
-			printf("konec parseru\n");
 			break;
 
 		case T_KEYWORD:

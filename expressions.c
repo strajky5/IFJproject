@@ -89,8 +89,7 @@ tErrors SearchFun()
     tParamList *parameterList;       
     int param_counter = 0;
     int param_number = 0;
-    printf("JSEM  ve EXPRASERU FUNC\n");
-    
+
     parameterList = allocate(sizeof(tParamList));
     initParamlist(parameterList);
 
@@ -107,22 +106,20 @@ tErrors SearchFun()
         gettoken();
         er = ConvertToken(&type);   // konvertovani tokenu
         if (er)                     // pokud konvert neprobehl v poradku
-            return E_SYN;           // koncim s chybou
-        printf("00000001\n");  
-        printf("P: %d T.TYPE: %d\n",param_number,T.type);
+            return E_SYN;           // koncim s chybou  
+        //printf("P: %d T.TYPE: %d\n",param_number,T.type);
         if ((param_number == 0) && (T.type != T_RB))
             return E_SEMB;
-         printf("02\n");  
+   
         while((type != RB) && ((strCmpConstStr (&(T.s), "end")!=0) && (T.type != T_SEMICOLON)))    // ber novy token dokud neprojdes vsechny parametry funkce         
-        { printf("JSEM  ve WHILE\n");  
-            printf("TOKEN 01: %s\n",T.s.str);
+        {   //printf("JSEM  ve WHILE\n");  
+            //printf("TOKEN 01: %s\n",T.s.str);
             if (T.type == T_ID)         // pokud je typ ID, vyhledej jej v BVS
             {   
                 if (insertParam(parameterList, &(T.s), T.type) != E_OK) return E_INTERN; 
                 if ((SearchDataType(TempTree, TempTreeL)) != NULL)      // pokud je token typu ID a je nalezen v BVS
                 {
                     pTree = SearchDataType(TempTree, TempTreeL);        // uloz mi ukazatel na prvek do stromu
-                     printf("TOKEN 02: %s\n",T.s.str);
                     if (pTree->type != param->type)                     // pokud neni typ tokenu roven typu parametru funkce 
                         return E_SEMB;                                  // vraci E_SEMB
                 }
@@ -152,17 +149,15 @@ tErrors SearchFun()
                         return E_SEMB;
             }
             else                    // pokud neni parametr ID
-            {printf("TOKEN ewfjiiudfujdfujdfudfsudfs: %s\n",T.s.str);
+            {
                 return E_SYN;       // vraci chybu E_SYN
-            } 
-             printf("TOKEN 02: %s\n",T.s.str);
-            
+            }             
 
             gettoken();
             er = ConvertToken(&type);   // konvertovani tokenu
             if (er)                     // pokud konvert neprobehl v poradku
                 return E_SYN;           // koncim s chybou
-            printf("TOKEN 02: %s\n",T.s.str);
+
             param_counter++;    // pocitadlo paramateru
 
             if (((param_counter == param_number) && (type != RB)) && (type != COMMA))  // pokud neni za ID carka nebo za posledni parametrem neni prava zavorka
@@ -178,7 +173,6 @@ tErrors SearchFun()
                 return E_SYN;           // koncim s chybou
         }
     
-        printf("PO WHILE\n");  
         if (param_number != param_counter)
             return E_SEMB;
 
@@ -203,11 +197,9 @@ tErrors SearchFun()
         Tape->last->op2 = NULL;
         Tape->last->result->type = FunPtr->ret_type; 
 
-         printf("PRED OK\n");  
          if (param_counter == 0)
             gettoken();
 
-          printf("TOKEN 02: %s\n",T.s.str);
         return E_OK;                      // pokud to najde funkci E_OK
 }
 
@@ -776,7 +768,6 @@ int ExpParser()
         if ((FunPtr = searchFunList(&(T.s))) != NULL)
         { 
             SearchFun();         // hledej ID v seznamu funkci a pokud ji tam najdes, zpracuj funkci
-            printf("erro: %d\n",er);
             er = InsertEmptyItemTape();     // vlozeni prazdneho prvku na instrukcni pasku, aby jsme do nej mohli nasledovne plnit urcite hodnoty
             if (er == E_INTERN)             // pokud se nepodari vlozeni
                 return er; 
