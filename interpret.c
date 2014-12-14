@@ -233,9 +233,10 @@ tErrors interpret()											// interpret
 								Tape->active->result->value.ival = Tape->active->op1->value.ival;
 								Tape->active->op1->valFull=DATA;
 								break;
-				case O_REAL:	c = getchar();
-								if (c = ".")
-									return E_RUNX;
+				case O_REAL:	//c = getchar();
+								//printf("%c\n",c);
+								//if (c == ".")
+								//	return E_RUNX;
 
 								scanf("%lf",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
 								printf("JE TO REAL!!!!!!!!\n");
