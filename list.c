@@ -1,3 +1,12 @@
+/* 
+* Názov projektu: Implementace interpretu imperativního jazyka IFJ14 
+* Dátum: 12/2014
+* Autori: Matúš Cimerman, xcimer00
+*         Tomáš Hynek ,   xhynek09
+*         David Novák ,   xnovak0r
+*         Michal Sedlák , xsedla0m
+*         Jan Jořenek  ,  xjoren01
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
