@@ -16,7 +16,7 @@
 
 tTape *Tape;
 TStack stack;           //Globálna premenná  pre zásobník
-
+string vracim;
 tErrors interpret()											// interpret
 {
   //  tTapeItem *savepositionCall=NULL;
@@ -251,7 +251,9 @@ tErrors interpret()											// interpret
 								Tape->active->op1->valFull=DATA;
 								break;
 				case O_STRING: 	strClear(&(Tape->active->op1->value.sval));
-								Tape->active->op1->value.sval = Readstring();
+								Readstring();
+								strCopystring(&(Tape->active->op1->value.sval), &(vracim));
+								strFree(vracim);
                                	Tape->active->result->type = O_STRING;
                                	Tape->active->op1->valFull = DATA;
                                	strCopystring(&(Tape->active->result->value.sval), &(Tape->active->op1->value.sval));
@@ -1629,7 +1631,6 @@ string *conc(string*s1,string*s2)
 string Readstring()
 {
     char a;
-    string vracim;
     strInit(&(vracim));            //pokud funkce init. stringu vrati chybu => E_INTERN
 	strClear(&(vracim));
     scanf("%c",&a);
