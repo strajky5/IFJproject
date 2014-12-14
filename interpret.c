@@ -23,7 +23,12 @@ tErrors interpret()											// interpret
 //    tTapeItem *savepositionJump=NULL;
     tParamItem *hodnota,*phodnota;
 	stackinit(&stack);
-	Tape->active = Tape->first;																		// inicializace pole
+	Tape->active = Tape->first;		// inicializace pole
+	while (Tape->active->instruction != MAINFUNC) {
+		if (Tape->active == NULL) return E_RUNX;
+		Tape->active = Tape->active->next;
+	}
+	Tape->active = Tape->active->next;
 	while(Tape->active != Tape->last->next)
 	{
 	printf("jsem v Interpret------------------------------------------------------------\n");

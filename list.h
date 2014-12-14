@@ -54,6 +54,7 @@ typedef enum {                  // instrukce na pasku
 	WRITE,
     JUMP,
     NOPJ,
+	MAINFUNC,
 	READ
 } tInstruction;
 

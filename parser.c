@@ -79,7 +79,6 @@ int parser() {
 	return error;
 }
 
-
 int program() {
 	gettoken();
 	switch(T.type){
@@ -96,10 +95,15 @@ int program() {
 	    if (!strCmpConstStr (&(T.s), "begin")) {// BEGIN
 		//if(searchFunListFW() != NULL) return E_SEMA;
 		if((error = searchFunListCH()) != E_OK) return E_SEMA;
+		error = InsertEmptyItemTape();      
+		if (error == E_INTERN)
+		   return error;
+		Tape->last->instruction = MAINFUNC;
+		
 		    gettoken();
 			if (!strCmpConstStr (&(T.s), "end")){           //BEGIN END. - prazdne
 			    gettoken();
-									error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
+				    error = InsertEmptyItemTape();        //vkladam novy prazdny prvek na pasku
 					if (error == E_INTERN)
 						return error;
 					Tape->last->instruction = NOP;
@@ -192,16 +196,13 @@ int function() {
 			if ((error = testToken(T_SEMICOLON)) != E_OK) return error;  // FORWARD a ";"
 		    return E_OK;
 		}
-
 		item = searchFunListN(&name);
 		if((item != NULL)) {
-		printf("tu sa nikdy nedostane \n");
 		if (item->forward != 2)
 		return E_SEMA;
 		}
 		else {
 		fw = 2;
-			printf("tu sa dostane \n");
 		if(insertFunListItem(&name,enumerator,paramlist,fw,pc) != E_OK) return E_INTERN;}
 		//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 		//item = searchFunListN(&name);
@@ -816,6 +817,9 @@ void constructInstStringLine1(string *dest, tInstruction instruction) {
         break;
 	case READ:
         strFromChar(dest, "READ");
+        break;
+		case MAINFUNC:
+        strFromChar(dest, "MAINFUNC");
         break;
     }
 }
