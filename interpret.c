@@ -1526,7 +1526,7 @@ tErrors interpret()											// interpret
 			}
 			//Tape->active->result->value.valFull=DATA;
 		}
-		else return E_RUNX;
+		//else return E_RUNX;
 		
 		printf("posunuti pasky\n");
 		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
@@ -1629,11 +1629,12 @@ string Readstring()
     char a;
     string vracim;
     strInit(&(vracim));            //pokud funkce init. stringu vrati chybu => E_INTERN
+    scanf("%c",&a);
 
-    do{	
-    	scanf("%c",&a);
+    while(a != '\n'){	
      	strAddChar(&vracim, a);
-    }while(a != '\n');
+     	scanf("%c",&a);
+    }
     
     return vracim;
 }
