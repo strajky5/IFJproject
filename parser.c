@@ -560,7 +560,7 @@ tErrors writefun() {
 	  else
 		  return error;
 	}
-	else if((error = testToken(T_STRING)) == E_OK){
+	if((error = testToken(T_STRING)) == E_OK){
 				if ((TempVar = allocate(sizeof(tVariable))) == NULL)	//pokud neni dostatek pameti => E_INTERN
                     return E_INTERN;
                 if (strInit(&(TempVar->name)) == STR_ERROR)			//pokud funkce init. stringu vrati chybu => E_INTERN
@@ -578,7 +578,6 @@ tErrors writefun() {
 	  }
 	  else if((error = testToken(T_COMMA)) == E_OK){
 		  gettoken();
-		  if((error = testToken(T_STRING)) == E_OK) return error;
 		  if((error = writefun()) != E_OK) return error;
 	  }
 	  else
