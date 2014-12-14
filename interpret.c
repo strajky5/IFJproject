@@ -48,8 +48,6 @@ tErrors interpret()											// interpret
 			
 			if(hodnota!=NULL && phodnota!=NULL)
 			{
-			printf("01 \n");
-
 				if(hodnota->type==O_INT && phodnota->type==O_INT)
 				{
 					hodnota->value.ival=phodnota->value.ival;
@@ -80,7 +78,6 @@ tErrors interpret()											// interpret
 			}
 			else if(hodnota==NULL && phodnota!=NULL)
 			{
-			printf("01 \n");
 				if(Tape->active->op1->type==O_INT && phodnota->type==O_INT)
 				{
 					Tape->active->op1->value.ival=phodnota->value.ival;
@@ -110,7 +107,6 @@ tErrors interpret()											// interpret
 			}
 			else if(hodnota!=NULL && phodnota==NULL)
 			{
-			printf("01 \n");
 				if(hodnota->type==O_INT && Tape->active->op2->type==O_INT)
 				{
 					hodnota->value.ival=Tape->active->op2->value.ival;
@@ -229,24 +225,29 @@ tErrors interpret()											// interpret
 
         if(Tape->active->instruction==READ)							// pokud je readln
 		{printf("jsem v read\n");
+			char c;
 			switch (Tape->active->op1->type)
 			{													// kontroluji podle typu
-				case O_INT: scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
-							Tape->active->result->type=O_INT;									// nastavim typ na int
-							Tape->active->result->value.ival = Tape->active->op1->value.ival;
-							Tape->active->op1->valFull=DATA;
-							break;
-				case O_REAL:scanf("%lf",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
-							Tape->active->result->value.rval=Tape->active->op1->value.rval;
-							Tape->active->result->type=O_REAL;									// nasatavim typ
-							Tape->active->op1->valFull=DATA;
-							break;
-				case O_STRING: Tape->active->op1->value.sval = Readstring();
-								printf("THIS IS FUCKING STRING: %s \n",Tape->active->op1->value.sval.str);
-                               Tape->active->result->type = O_STRING;
-                               Tape->active->op1->valFull = DATA;
-                               strCopystring(&(Tape->active->result->value.sval), &(Tape->active->op1->value.sval));
-		   					   break;
+				case O_INT: 	scanf("%d",&Tape->active->op1->value.ival);						// jde o inttak ho naskenuji a nahraji do op2
+								Tape->active->result->type=O_INT;									// nastavim typ na int
+								Tape->active->result->value.ival = Tape->active->op1->value.ival;
+								Tape->active->op1->valFull=DATA;
+								break;
+				case O_REAL:	c = getchar();
+								if (c = ".")
+									return E_RUNX;
+
+								scanf("%lf",&Tape->active->op1->value.rval);						// pokud jde o real tak ho naskenuji do op2
+								printf("JE TO REAL!!!!!!!!\n");
+								Tape->active->result->value.rval=Tape->active->op1->value.rval;
+								Tape->active->result->type=O_REAL;									// nasatavim typ
+								Tape->active->op1->valFull=DATA;
+								break;
+				case O_STRING: 	Tape->active->op1->value.sval = Readstring();
+                               	Tape->active->result->type = O_STRING;
+                               	Tape->active->op1->valFull = DATA;
+                               	strCopystring(&(Tape->active->result->value.sval), &(Tape->active->op1->value.sval));
+		   					   	break;
 				default : return E_RUNX;
 			}
 		}
@@ -465,19 +466,18 @@ tErrors interpret()											// interpret
 	   		{
 	   			printf("add\n");
 	   			if(Tape->active->op1->type == O_STRING && Tape->active->op2->type == O_STRING)
-					{
+					{	
 						string cop;
 					if(conc(&Tape->active->op1->value.sval,&Tape->active->op2->value.sval)==NULL)	/// spojeni dvou stringu
 							return E_RUNX;
-						strCmpConstStr(&cop,Tape->active->op1->value.sval.str);
-						strCmpstring(&Tape->active->op1->value.sval,&cop);
+						//strCmpConstStr(&cop,Tape->active->op1->value.sval.str);
+						//strCmpstring(&Tape->active->op1->value.sval,&cop);
 						Tape->active->result->value.sval=Tape->active->op1->value.sval;
 						Tape->active->result->type=O_STRING;
 						
 					}
 				else if(Tape->active->op1->type == O_INT && Tape->active->op2->type == O_INT)
 					{
-							printf("co tu delam\n");
 						Tape->active->result->value.ival=Tape->active->op1->value.ival+Tape->active->op2->value.ival;
 						printf("soucet%d+%d\n",Tape->active->op1->value.ival,Tape->active->op1->value.ival);
 						printf("vysledok je : %d \n",Tape->active->result->value.ival);
