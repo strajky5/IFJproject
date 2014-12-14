@@ -253,7 +253,7 @@ tErrors interpret()											// interpret
 				case O_STRING: 	strClear(&(Tape->active->op1->value.sval));
 								Readstring();
 								strCopystring(&(Tape->active->op1->value.sval), &(vracim));
-								strFree(vracim);
+								strFree(&vracim);
                                	Tape->active->result->type = O_STRING;
                                	Tape->active->op1->valFull = DATA;
                                	strCopystring(&(Tape->active->result->value.sval), &(Tape->active->op1->value.sval));
