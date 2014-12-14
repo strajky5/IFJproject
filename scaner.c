@@ -81,14 +81,6 @@ int iskeyword(char*sid)
 	s="write";
     if(strcasecmp (sid,s)==0)
         return 1;
- /*   else{
-	s="find";
-    if(strcasecmp (sid,s)==0)
-        return 1;
-    else{
-	s="sort";
-    if(strcasecmp (sid,s)==0)
-        return 1;*/
     else{
     s="false";
     if(strcasecmp (sid,s)==0)
@@ -110,8 +102,6 @@ int iskeyword(char*sid)
 	}
 	}
 	}
-	//}
-	//}
 	}
 	}
 	}
@@ -138,7 +128,6 @@ void gettoken()
     char h; 
     int state=0; 
     c=fgetc(f); 
-	//printf(" c = %c \n",c);
     if(c==EOF) 
     {
         T.type=T_EOF; 
@@ -199,11 +188,11 @@ void gettoken()
                     return;
                 }
                 else{ 
-                switch(c) //bude prepinat medzi dalsimi moznostami (stale v pociatocnom stave)
+                switch(c) //bude prepinat medzi dalsimi moznostami stale v pociatocnom stave
                 {
                 case '\'': 
                 {
-                    state=11;//->STRING
+                    state=11;//->T_STRING
                     c=fgetc(f);
                     break;
                 }
@@ -515,14 +504,46 @@ void gettoken()
 			{
 			c=fgetc(f);
 				if ( c == '\''){
+					if(strAddChar(&(T.s),c)== STR_ERROR)
+                    {
+                        T.type=T_ERRORSYSTEM; 
+                        return; 
+                    }
 				c=fgetc(f);
 				break;}
 				
 				if ( c == '#'){
+				if(strAddChar(&(T.s),c)== STR_ERROR)
+                    {
+                        T.type=T_ERRORSYSTEM; 
+                        return; 
+                    }
 				c=fgetc(f);
 				if(isdigit(c)!=0)
                 {
-                    if(strAddChar(&(T.s),h)== STR_ERROR)
+					if(c == '0'){
+					while (c == '0')
+				    {
+				     c=fgetc(f);
+					}
+					
+                    if(strAddChar(&(T.s),c)== STR_ERROR)
+                    {
+                        T.type=T_ERRORSYSTEM; 
+                        return; 
+                    }
+					}
+				}
+				else 
+				{
+				T.type = T_ERRORTOKEN;
+				return;
+				break;
+				}
+				c=fgetc(f);
+				if(isdigit(c)!=0)
+                {
+                    if(strAddChar(&(T.s),c)== STR_ERROR)
                     {
                         T.type=T_ERRORSYSTEM; 
                         return; 
@@ -537,22 +558,7 @@ void gettoken()
 				c=fgetc(f);
 				if(isdigit(c)!=0)
                 {
-                    if(strAddChar(&(T.s),h)== STR_ERROR)
-                    {
-                        T.type=T_ERRORSYSTEM; 
-                        return; 
-                    }
-				}
-				else 
-				{
-				T.type = T_ERRORTOKEN;
-				return;
-				break;
-				}
-				c=fgetc(f);
-				if(isdigit(c)!=0)
-                {
-                    if(strAddChar(&(T.s),h)== STR_ERROR)
+                    if(strAddChar(&(T.s),c)== STR_ERROR)
                     {
                         T.type=T_ERRORSYSTEM; 
                         return; 
