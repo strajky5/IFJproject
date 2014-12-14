@@ -149,11 +149,12 @@ int program() {
 }
 
 int function() {
+    tVariable *op1 = allocate(sizeof(tVariable));
+    tVariable *op2 = allocate(sizeof(tVariable));
 	int enumerator;
 	int fw =0;
 	pc =0;
 	gettoken();
-	printf (" bla ");
 	if ((error = testToken(T_ID)) != E_OK) return error; // ID_funkce - mozna upresnit
 	string name;                                          // tu je vkladanie funkcii do seznamu 98-103
 	if(strInit(&name) != STR_SUCCESS) return E_INTERN;
@@ -204,24 +205,23 @@ int function() {
 		else {
 		fw = 2;
 		if(insertFunListItem(&name,enumerator,paramlist,fw,pc) != E_OK) return E_INTERN;}
-		//if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+		if(InsertEmptyItemTape() != E_OK) return E_INTERN;
 		//item = searchFunListN(&name);
-		//Tape->last->instruction = FUNC;
-		//item->tape_ptr = Tape->last;
+		Tape->last->instruction = FUNC;
+		op1->name = name;
+		op2->value.tape_pointer = Tape->last;
+		op2->type = TAPE_POINTER;
+		Tape->last->op1 = op1;
+		Tape->last->op2 = op2;
 
 		if (!strCmpConstStr (&(T.s), "var")) {
 			gettoken();
 			if ((error = localDecl()) != E_OK) return error; // deklarace lokalnich promennych
 		}
-	//	printf("za local decl \n");
 		if (!strCmpConstStr (&(T.s), "begin")) {
-		printf (" bla ");
 			gettoken();
-		//	printf("za bein \n");
 			if ((error = blockList()) != E_OK) return error;
 			gettoken();
-			printf (" bla ");
-		//	printf("semicollon \n");
 			if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 			return E_OK;
 		}
@@ -235,7 +235,6 @@ int function() {
 
 
 int blockList() {
-//printf("block list \n");
 	switch(T.type){
 		case T_KEYWORD:
 			if (!(strCmpConstStr (&(T.s), "end"))) {

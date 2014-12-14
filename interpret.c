@@ -1526,6 +1526,7 @@ tErrors interpret()											// interpret
 			}
 			//Tape->active->result->value.valFull=DATA;
 		}
+		else return E_RUNX;
 		
 		printf("posunuti pasky\n");
 		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
