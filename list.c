@@ -202,6 +202,7 @@ tErrors insertFunListItem(string *name, tOperand r_type, tParamList *params,int 
 	    if(strCopystring(&(item->name), name) != STR_SUCCESS ) 					   // nakopiruj ze vstupu name do item->name
 	    	return E_INTERN;      											   // pokud kopirovani neprobehne v poradku vrati interni chybu 
 		item->param_count = paramcount; 
+        item->ret_value.ival = 0;
         item->forward = forward;               // parametr pocitadlo vynuluj
         item->ret_type = r_type;             // navratovy typ funkce
         item->param_list = params;           // vloz ukazatel na seznam parametru

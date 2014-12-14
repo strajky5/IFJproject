@@ -17,6 +17,7 @@
 tTape *Tape;
 TStack stack;           //Globálna premenná  pre zásobník
 string vracim;
+tTapeItem *back_pointer;
 tErrors interpret()											// interpret
 {
   //  tTapeItem *savepositionCall=NULL;
@@ -183,7 +184,7 @@ tErrors interpret()											// interpret
 
 		}
 
-		if (Tape->active->instruction==JUMPN)											// pokud jde o if neho while tak kontroluji na jump
+		else if (Tape->active->instruction==JUMPN)											// pokud jde o if neho while tak kontroluji na jump
 		{
 		
 		    //savepositionJump=Tape->active;
@@ -228,7 +229,7 @@ tErrors interpret()											// interpret
 			continue;
 		}
 
-        if(Tape->active->instruction==READ)							// pokud je readln
+        else if(Tape->active->instruction==READ)							// pokud je readln
 		{printf("jsem v read\n");
 			char c;
 			switch (Tape->active->op1->type)
@@ -308,18 +309,18 @@ tErrors interpret()											// interpret
 			}
 		}
 		
-		/*if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
+		else if(Tape->active->instruction==CALL)													// pokud je je typ funkce tak jdi do vetve pro funkce
 		{
 			printf("jsem v funkci\n");
 		    tParamItem *pomocna;
 		    pomocna = Tape->active->op1->value.param_pointer;
-		    printf("%d\n",Tape->active->op1->value.param_pointer->value.ival);
-			printf("po pocmonceeuc\n");
-			stackPush(&stack,&pomocna);		
-			printf("%d\n",pomocna->value.ival);										// pushnu si na zasobnik parametry funkce
-            printf("fuhsdhihsduifudsifhdhufihiusdhfihdyusfhui\n");  */                                                                      // nini jdu do funci ktere jsou vestavene
+			stackPush(&stack,&pomocna);									// pushnu si na zasobnik parametry funkce
+			printf("what\n");
+			back_pointer = Tape->active;
+			Tape->active = Tape->active->op1->value.tape_pointer;
+
             
-			/*
+		/*
 			else if(strCmpConstStr(&Tape->active->op1->name, "length"))							// pokud jde o length tak
 			{
 				if(stack.top->op1->type!=O_STRING) return E_RUNX;								// pokud neni typ string vrat chybu
@@ -372,8 +373,18 @@ tErrors interpret()											// interpret
 			*/	/*Tape->active->op1->type=O_STRING;		*/										// a nastavim typ na string
 //            Tape->active->op1->value.valFull=TRUE;
 			//}
-			//}
-		
+			}
+		else if(Tape->active->instruction==RET)													// pokud je je typ funkce tak jdi do vetve pro funkce
+		{	
+			printf("hej\n");
+			Tape->active = back_pointer;
+
+		}
+		else if(Tape->active->instruction==FUNC)													// pokud je je typ funkce tak jdi do vetve pro funkce
+		{
+			printf("hej01\n");
+			//Tape->active = Tape->active->next;
+		}
 		/*********************************************ADD*********************************************************/
 	   else if(Tape->active->instruction==ADD)
 	   {
@@ -1535,8 +1546,9 @@ tErrors interpret()											// interpret
 		}
 		//else return E_RUNX;
 		
-		printf("posunuti pasky\n");
-		Tape->active=Tape->active->next;														// posunuti na pasce na dasi instrukci
+		printf("posunuti pasky %d\n",&(Tape->active));
+		Tape->active=Tape->active->next;		
+		printf("posunuti pasky0000000\n");												// posunuti na pasce na dasi instrukci
 	}
 
 	//StackDeleteDataDelete(&stack);															// uvolneni celeho zasobniku

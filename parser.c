@@ -228,6 +228,16 @@ int function() {
 		if (!strCmpConstStr (&(T.s), "begin")) {
 			gettoken();
 			if ((error = blockList()) != E_OK) return error;
+			if(InsertEmptyItemTape() != E_OK) return E_INTERN;
+
+			tVariable *op11 = allocate(sizeof(tVariable));
+			tVariable *op22 = allocate(sizeof(tVariable));
+			Tape->last->instruction = RET;
+			op11->type = TAPE_POINTER;
+			Tape->last->op2 = op22;
+			Tape->last->op1 = op11;
+			Tape->last->result = op22;
+
 			gettoken();
 			if ((error = testToken(T_SEMICOLON)) != E_OK) return error;
 			return E_OK;
@@ -841,7 +851,10 @@ void constructInstStringLine1(string *dest, tInstruction instruction) {
 	case READ:
         strFromChar(dest, "READ");
         break;
-		case MAINFUNC:
+    case RET:
+        strFromChar(dest, "RET");
+        break;
+	case MAINFUNC:
         strFromChar(dest, "MAINFUNC");
         break;
     }

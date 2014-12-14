@@ -189,12 +189,14 @@ tErrors SearchFun()
 
         temp->name = FunPtr->name;
         temp->value.param_pointer = parameterList->first;
+        temp->type = PARAM_POINTER;
+
         temp2->type = TAPE_POINTER;
         temp2->value.tape_pointer = FunPtr->tape_ptr;
 
         Tape->last->op1 = temp;         // ulozeni ukazatele na tVariable polozku, ktera obsahuje ukazatel na funkci na pasce 
         Tape->last->instruction = CALL;  // instrukce je funkce
-        Tape->last->op2 = NULL;
+        Tape->last->op2 = temp2;
         Tape->last->result->type = FunPtr->ret_type; 
 
          if (param_counter == 0)

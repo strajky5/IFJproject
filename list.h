@@ -56,7 +56,8 @@ typedef enum {                  // instrukce na pasku
     JUMP,
     NOPJ,
 	MAINFUNC,
-	READ
+	READ,
+    RET
 } tInstruction;
 
 typedef union {                 // hodnota daneho tokenu po konvertovani
@@ -110,6 +111,7 @@ typedef struct {                // jednosmerny seznam parametru funkce
 
 typedef struct FunListItem {    // prvek tabulky pro funkce
     string name;                // nazev prvku
+    tValue ret_value;
     int param_count;            // pocitadlo parametru
 	int forward;
     tOperand ret_type;          // navratovy typ funkce
